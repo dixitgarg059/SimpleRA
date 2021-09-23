@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "string": "cpp",
+        "filesystem": "cpp",
+        "iosfwd": "cpp",
+        "__split_buffer": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "*.tcc": "cpp",
+        "ostream": "cpp"
+    }
+}

@@ -1,0 +1,1 @@
+Case insensitive for loading table but for checking if table exists or not it is not. 

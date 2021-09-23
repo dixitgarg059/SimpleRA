@@ -1,0 +1,63 @@
+BufferManager::BufferManager
+ParseQuery::clear
+
+Reading New Command: 
+LOAD MATRIX sparse-mat
+doCommand
+syntacticParse
+SyntacticParseLoadMatrix
+semanticParse
+SemanticParseLoadMatrix
+TableCatalogue::isTable
+executeLOADMatrix
+Matrix::Matrix
+Matrix::load
+MatrixCatalogue::insertMatrix
+ParseQuery::clear
+
+Reading New Command: 
+PRINT MATRIX sparse-mat
+doCommand
+syntacticParse
+SyntacticParsePrintMatrix
+semanticParse
+SemanticParsePrintMatrix
+MatrixCatalogue::isMatrix
+ExecutePrintMatrix
+MatrixCatalogue::getMatrix
+inside print matrix function
+TableCatalogue::getTable
+Page::Page
+ParseQuery::clear
+
+Reading New Command: 
+TRANSPOSE MATRIX sparse-mat
+doCommand
+syntacticParse
+SyntacticParseTranspose
+ParseQuery::clear
+
+Reading New Command: 
+TRANSPOSE sparse-mat
+doCommand
+syntacticParse
+SyntacticParseTranspose
+semanticParse
+SemanticParseTranspose
+MatrixCatalogue::isMatrix
+ExecuteTranspose
+MatrixCatalogue::getMatrix
+inside the transpose function
+ParseQuery::clear
+
+Reading New Command: 
+PRINT sparse-mat
+doCommand
+syntacticParse
+syntacticParsePRINT
+semanticParse
+semanticParsePRINT
+TableCatalogue::isTable
+executePRINT
+TableCatalogue::getTable
+Table::print

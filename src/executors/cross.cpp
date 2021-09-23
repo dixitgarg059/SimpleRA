@@ -1,4 +1,4 @@
-#include "global.h"
+#include "../global.h"
 
 /**
  * @brief 
@@ -47,7 +47,8 @@ void executeCROSS()
     vector<string> columns;
 
     //If both tables are the same i.e. CROSS a a, then names are indexed as a1 and a2
-    if(table1.tableName == table2.tableName){
+    if (table1.tableName == table2.tableName)
+    {
         parsedQuery.crossFirstRelationName += "1";
         parsedQuery.crossSecondRelationName += "2";
     }
@@ -73,7 +74,7 @@ void executeCROSS()
         columns.emplace_back(columnName);
     }
 
-    Table *resultantTable = new Table(parsedQuery.crossResultRelationName, columns);\
+    Table *resultantTable = new Table(parsedQuery.crossResultRelationName, columns);
 
     Cursor cursor1 = table1.getCursor();
     Cursor cursor2 = table2.getCursor();

@@ -1,4 +1,4 @@
-#include "global.h"
+#include "../global.h"
 /**
  * @brief 
  * SYNTAX: PRINT relation_name
@@ -30,7 +30,7 @@ bool semanticParsePRINT()
 void executePRINT()
 {
     logger.log("executePRINT");
-    Table* table = tableCatalogue.getTable(parsedQuery.printRelationName);
+    Table *table = tableCatalogue.getTable(parsedQuery.printRelationName);
     table->print();
     return;
 }

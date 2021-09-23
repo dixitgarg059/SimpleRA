@@ -56,6 +56,7 @@ public:
     void unload();
     void transpose();
     int FindInCompressedTable(int row, int col);
+    void SortRowWise(int row_index);
     /**
  * @brief Static function that takes a vector of valued and prints them out in a
  * comma seperated format.

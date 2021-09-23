@@ -1,4 +1,4 @@
-#include "global.h"
+#include "../global.h"
 /**
  * @brief 
  * SYNTAX: INDEX ON column_name FROM relation_name USING indexing_strategy
@@ -43,8 +43,9 @@ bool semanticParseINDEX()
         cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
         return false;
     }
-    Table* table = tableCatalogue.getTable(parsedQuery.indexRelationName);
-    if(table->indexed){
+    Table *table = tableCatalogue.getTable(parsedQuery.indexRelationName);
+    if (table->indexed)
+    {
         cout << "SEMANTIC ERROR: Table already indexed" << endl;
         return false;
     }

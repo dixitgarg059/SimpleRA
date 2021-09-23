@@ -429,6 +429,118 @@ bool Matrix::blockify()
  * folder.
  *
  */
+
+bool comp1(const vector<int> &a, const vector<int> &b)
+{
+
+    return std::tie(a[1], a[0]) < std::tie(b[1], b[0]);
+}
+
+bool comp2(const vector<int> &a, const vector<int> &b)
+{
+
+    return std::tie(a[0], a[1]) < std::tie(b[0], b[1]);
+}
+
+void Matrix::SortRowWise(int row_index)
+{
+
+    cout << "in sort";
+    vector<ifstream> opened_files(this->blockCount);
+    for (int i = 0; i < this->blockCount; i++)
+    {
+        Page *p = bufferManager.getPage(this->MatrixName, i);
+        if (row_index == 1)
+            sort(p->rows.begin(), p->rows.end(), comp1);
+        else
+            sort(p->rows.begin(), p->rows.end(), comp2);
+
+        p->writePage();
+        opened_files[i].open(p->pageName);
+        // opened_files.push_back(fin);
+    }
+    string filename = "../data/temp/sorted_output";
+    ofstream fout(filename, ios::trunc);
+    // return;
+    while (1)
+    {
+        int idx = -1;
+        int record_idx = -1, row_min, col_min;
+        for (auto &fp : opened_files)
+        {
+            idx++;
+            if (fp.eof())
+                continue;
+            string line;
+            getline(fp, line);
+            fp.seekg(-line.size() - 1, ios::cur);
+            stringstream s(line);
+            string word_col;
+            if (!getline(s, word_col, ' '))
+                continue;
+
+            int col = stoi(word_col);
+            string word_row;
+            getline(s, word_row, ' ');
+
+            int row = stoi(word_row);
+
+            if (row_index == 0)
+                swap(row, col);
+            if (record_idx == -1 || std::tie(row_min, col_min) > std::tie(row, col))
+            {
+                record_idx = idx;
+                row_min = row;
+                col_min = col;
+            }
+        }
+        if (record_idx == -1)
+            break;
+        string line;
+        getline(opened_files[record_idx], line);
+        fout << line << "\n";
+    }
+    for (auto &fp : opened_files)
+        fp.close();
+    fout.close();
+    vector<vector<int>> data;
+    string line;
+    ifstream fin(filename, ios::in);
+    int row_idx = 0;
+    int page_number = 0;
+    int page_size = (1000 * BLOCK_SIZE) / (sizeof(int) * 3);
+    while (getline(fin, line))
+    {
+        stringstream s(line);
+        string word;
+        vector<int> row;
+        while (getline(s, word, ' '))
+        {
+            if (word.back() == '\n')
+                word.pop_back();
+            row.push_back(stoi(word));
+        }
+        data.push_back(row);
+        row_idx++;
+        if (row_idx % page_size == 0)
+        {
+            Page *page = bufferManager.getPage(this->MatrixName, page_number);
+            page->rows = data;
+            page->writePage();
+            data.clear();
+            page_number++;
+        }
+    }
+    if (!data.empty())
+    {
+        Page *page = bufferManager.getPage(this->MatrixName, page_number);
+        page->rows = data;
+        page->writePage();
+        data.clear();
+        page_number++;
+    }
+    remove(filename.c_str());
+}
 void Matrix::makePermanent()
 {
     logger.log("Matrix::makePermanent");
@@ -447,61 +559,54 @@ void Matrix::makePermanent()
         Page *cur_page = bufferManager.getPage(this->MatrixName, 0);
         int cur_page_number = 0, page_pointer = 0;
         int row_index, col_index;
-        if (this->columns[0] == "rows")
+        if (this->columns[0] == "cols")
+        {
+            // SortRowWise();
+            row_index = 1;
+            col_index = 0;
+        }
+        else
         {
             row_index = 0;
             col_index = 1;
-            bool blocks_finished = false;
-            for (int i = 0; i < this->rowCount; ++i)
-            {
+        }
+        bool blocks_finished = false;
+        for (int i = 0; i < this->rowCount; ++i)
+        {
 
-                for (int j = 0; j < this->columnCount; ++j)
+            for (int j = 0; j < this->columnCount; ++j)
+            {
+                if (blocks_finished)
                 {
-                    if (blocks_finished)
+                    fout << 0;
+                    fout << ((j == this->columnCount - 1) ? "\n" : ",");
+                    continue;
+                }
+                if (page_pointer == cur_page->rows.size())
+                {
+                    cur_page_number++;
+                    if (cur_page_number == this->blockCount)
                     {
+                        blocks_finished = true;
                         fout << 0;
                         fout << ((j == this->columnCount - 1) ? "\n" : ",");
                         continue;
                     }
-                    if (page_pointer == cur_page->rows.size())
-                    {
-                        cur_page_number++;
-                        if (cur_page_number == this->blockCount)
-                        {
-                            blocks_finished = true;
-                            fout << 0;
-                            fout << ((j == this->columnCount - 1) ? "\n" : ",");
-                            continue;
-                        }
-                        else
-                        {
-                            cur_page = bufferManager.getPage(this->MatrixName, cur_page_number);
-                            page_pointer = 0;
-                        }
-                    }
-                    if (cur_page->rows[page_pointer][row_index] == i && cur_page->rows[page_pointer][col_index] == j)
-                    {
-                        fout << cur_page->rows[page_pointer][2];
-                        fout << ((j == this->columnCount - 1) ? "\n" : ",");
-                        page_pointer++;
-                    }
                     else
                     {
-                        fout << 0;
-                        fout << ((j == this->columnCount - 1) ? "\n" : ",");
+                        cur_page = bufferManager.getPage(this->MatrixName, cur_page_number);
+                        page_pointer = 0;
                     }
                 }
-            }
-        }
-        else
-        {
-            row_index = 1;
-            col_index = 0;
-            for (int i = 0; i < this->rowCount; ++i)
-            {
-                for (int j = 0; j < this->columnCount; ++j)
+                if (cur_page->rows[page_pointer][row_index] == i && cur_page->rows[page_pointer][col_index] == j)
                 {
-                    fout << FindInCompressedTable(i, j);
+                    fout << cur_page->rows[page_pointer][2];
+                    fout << ((j == this->columnCount - 1) ? "\n" : ",");
+                    page_pointer++;
+                }
+                else
+                {
+                    fout << 0;
                     fout << ((j == this->columnCount - 1) ? "\n" : ",");
                 }
             }
@@ -645,62 +750,55 @@ void Matrix::print()
 
     if (is_sparse)
     {
+
         Page *cur_page = bufferManager.getPage(this->MatrixName, 0);
         int cur_page_number = 0, page_pointer = 0;
         int row_index, col_index;
-        if (this->columns[0] == "rows")
+        if (this->columns[0] == "columns")
         {
-            row_index = 0;
-            col_index = 1;
-            bool blocks_finished = false;
-            for (int i = 0; i < min(20, (int)this->rowCount); ++i)
-            {
-                for (int j = 0; j < this->columnCount; ++j)
-                {
-                    if (blocks_finished)
-                    {
-                        cout << 0 << " ";
-                        continue;
-                    }
-                    if (page_pointer == cur_page->rows.size())
-                    {
-                        cur_page_number++;
-                        if (cur_page_number == this->blockCount)
-                        {
-                            blocks_finished = true;
-                            cout << 0 << " ";
-                            continue;
-                        }
-                        else
-                        {
-                            cur_page = bufferManager.getPage(this->MatrixName, cur_page_number);
-                            page_pointer = 0;
-                        }
-                    }
-                    if (cur_page->rows[page_pointer][row_index] == i && cur_page->rows[page_pointer][col_index] == j)
-                    {
-                        cout << cur_page->rows[page_pointer][2] << " ";
-                        page_pointer++;
-                    }
-                    else
-                        cout << 0 << " ";
-                }
-                cout << endl;
-            }
+            // SortRowWise();
+            row_index = 1;
+            col_index = 0;
         }
         else
         {
-            row_index = 1;
-            col_index = 0;
-            for (int i = 0; i < this->rowCount; ++i)
+            row_index = 0;
+            col_index = 1;
+        }
+        bool blocks_finished = false;
+        for (int i = 0; i < min(20, (int)this->rowCount); ++i)
+        {
+            for (int j = 0; j < this->columnCount; ++j)
             {
-
-                for (int j = 0; j < this->columnCount; ++j)
+                if (blocks_finished)
                 {
-                    cout << FindInCompressedTable(i, j) << " ";
+                    cout << 0 << " ";
+                    continue;
                 }
-                cout << endl;
+                if (page_pointer == cur_page->rows.size())
+                {
+                    cur_page_number++;
+                    if (cur_page_number == this->blockCount)
+                    {
+                        blocks_finished = true;
+                        cout << 0 << " ";
+                        continue;
+                    }
+                    else
+                    {
+                        cur_page = bufferManager.getPage(this->MatrixName, cur_page_number);
+                        page_pointer = 0;
+                    }
+                }
+                if (cur_page->rows[page_pointer][row_index] == i && cur_page->rows[page_pointer][col_index] == j)
+                {
+                    cout << cur_page->rows[page_pointer][2] << " ";
+                    page_pointer++;
+                }
+                else
+                    cout << 0 << " ";
             }
+            cout << endl;
         }
     }
     else
@@ -734,7 +832,11 @@ void Matrix::transpose()
     logger.log("inside the transpose function");
     if (this->is_sparse)
     {
+        int row_index = 0;
         swap(this->columns[0], this->columns[1]);
+        if (this->columns[0] == "columns")
+            row_index = 1;
+        SortRowWise(row_index);
         // now sort it according to row and then according to column
     }
     else

@@ -1,4 +1,4 @@
-#include "global.h"
+#include "../global.h"
 /**
  * @brief 
  * SYNTAX: R <- SELECT column_name bin_op [column_name | int_literal] FROM relation_name
@@ -108,7 +108,7 @@ void executeSELECTION()
     logger.log("executeSELECTION");
 
     Table table = *tableCatalogue.getTable(parsedQuery.selectionRelationName);
-    Table* resultantTable = new Table(parsedQuery.selectionResultRelationName, table.columns);
+    Table *resultantTable = new Table(parsedQuery.selectionResultRelationName, table.columns);
     Cursor cursor = table.getCursor();
     vector<int> row = cursor.getNext();
     int firstColumnIndex = table.getColumnIndex(parsedQuery.selectionFirstColumnName);
@@ -128,10 +128,11 @@ void executeSELECTION()
             resultantTable->writeRow<int>(row);
         row = cursor.getNext();
     }
-    if(resultantTable->blockify())
+    if (resultantTable->blockify())
         tableCatalogue.insertTable(resultantTable);
-    else{
-        cout<<"Empty Table"<<endl;
+    else
+    {
+        cout << "Empty Table" << endl;
         resultantTable->unload();
         delete resultantTable;
     }

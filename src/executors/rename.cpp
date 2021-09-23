@@ -1,4 +1,4 @@
-#include "global.h"
+#include "../global.h"
 /**
  * @brief 
  * SYNTAX: RENAME column_name TO column_name FROM relation_name
@@ -45,7 +45,7 @@ bool semanticParseRENAME()
 void executeRENAME()
 {
     logger.log("executeRENAME");
-    Table* table = tableCatalogue.getTable(parsedQuery.renameRelationName);
+    Table *table = tableCatalogue.getTable(parsedQuery.renameRelationName);
     table->renameColumn(parsedQuery.renameFromColumnName, parsedQuery.renameToColumnName);
     return;
 }

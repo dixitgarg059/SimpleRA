@@ -1,4 +1,4 @@
-#include "global.h"
+#include "../global.h"
 /**
  * @brief 
  * SYNTAX: R <- PROJECT column_name1, ... FROM relation_name
@@ -50,7 +50,7 @@ bool semanticParsePROJECTION()
 void executePROJECTION()
 {
     logger.log("executePROJECTION");
-    Table* resultantTable = new Table(parsedQuery.projectionResultRelationName, parsedQuery.projectionColumnList);
+    Table *resultantTable = new Table(parsedQuery.projectionResultRelationName, parsedQuery.projectionColumnList);
     Table table = *tableCatalogue.getTable(parsedQuery.projectionRelationName);
     Cursor cursor = table.getCursor();
     vector<int> columnIndices;

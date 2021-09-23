@@ -515,9 +515,12 @@ void Matrix::makePermanent()
             int cur_page_number = GetPageNumberFromCoordinates(rowCounter, 0);
             Page *cur_page = bufferManager.getPage(this->MatrixName, cur_page_number);
             int relative_x = rowCounter % this->sub_matrix_side;
+            int expected_page_number;
             for (int colCounter = 0; colCounter < this->columnCount; ++colCounter)
             {
-                int expected_page_number = GetPageNumberFromCoordinates(rowCounter, colCounter);
+
+                if (colCounter % this->sub_matrix_side == 0)
+                    expected_page_number = GetPageNumberFromCoordinates(rowCounter, colCounter);
                 int relative_y = colCounter % this->sub_matrix_side;
 
                 if (cur_page_number != expected_page_number)

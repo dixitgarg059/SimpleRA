@@ -114,7 +114,11 @@ Page *BufferManager::getFromPool2(const string &pageName, int rowNumber)
 Page *BufferManager::insertIntoPool(const string &tableName, int pageIndex, bool is_matrix)
 {
 
-    pages_having_one_row.clear();
+    while (!pages_having_one_row.empty())
+    {
+        delete pages_having_one_row.front();
+        pages_having_one_row.pop_front();
+    }
     if (is_matrix)
     {
         // logger.log("BufferManager::insertIntoPool for matrix");
@@ -137,8 +141,8 @@ Page *BufferManager::insertIntoPool(const string &tableName, int pageIndex, bool
             stringstream s(line);
             int no_columns = 0;
             page->rows.push_back(row);
-            if (data.size() > 1)
-                data.back().reserve(prev(data.end())->size());
+            if (page->rows.size() > 1)
+                page->rows.back().reserve(prev(page->rows.end())->size());
             while (getline(s, word, ' '))
             {
                 no_columns++;

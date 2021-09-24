@@ -224,11 +224,14 @@ void BufferManager::writePage(const string &tableName, int pageIndex, const vect
     // logger.log("BufferManager::writePage");
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
     ofstream fout(pageName, ios::trunc);
+    int idx = 0;
     for (const auto &row : rows)
     {
         for (const auto &col : row)
             fout << col << " ";
-        fout << "\n";
+        if (idx != rows.size() - 1)
+            fout << "\n";
+        idx++;
     }
     fout.close();
 }

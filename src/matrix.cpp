@@ -461,32 +461,56 @@ void Matrix::SortRowWise(int row_index)
     }
     string filename = "../data/temp/sorted_output";
     ofstream fout(filename, ios::trunc);
+
+    vector<vector<short int>> coordinates(this->blockCount, vector<short int>{-1, -1, -1});
     // return;
     while (1)
     {
         int idx = -1;
-        int record_idx = -1, row_min, col_min;
+        short int record_idx = -1, row_min, col_min;
         for (auto &fp : opened_files)
         {
             idx++;
-            if (fp.eof())
+            if (coordinates[idx][0] == -2 || fp.eof())
+            {
+                coordinates[idx][0] = -2;
                 continue;
-            string line;
-            getline(fp, line);
-            fp.seekg(-line.size() - 1, ios::cur);
-            stringstream s(line);
-            string word_col;
-            if (!getline(s, word_col, ' '))
-                continue;
-
-            int col = stoi(word_col);
-            string word_row;
-            getline(s, word_row, ' ');
-
-            int row = stoi(word_row);
-
-            if (row_index == 0)
+            }
+            short int row = coordinates[idx][0], col = coordinates[idx][1];
+            if (row_index == 1)
+            {
                 swap(row, col);
+            }
+            if (coordinates[idx][0] == -1)
+            {
+                string line;
+                getline(fp, line);
+                // fp.seekg(-line.size() - 1, ios::cur);
+                stringstream s(line);
+                string word_row;
+                if (!getline(s, word_row, ' '))
+                {
+                    coordinates[idx][0] = -2;
+                    continue;
+                }
+                coordinates[idx][0] = stoi(word_row);
+                string word_col;
+                getline(s, word_col, ' ');
+
+                coordinates[idx][1] = stoi(word_col);
+
+                row = coordinates[idx][0], col = coordinates[idx][1];
+                if (row_index == 1)
+                {
+                    swap(row, col);
+                }
+                string value;
+                getline(s, value, ' ');
+                if (value.back() == '\n')
+                    value.pop_back();
+                coordinates[idx][2] = stoi(value);
+            }
+
             if (record_idx == -1 || std::tie(row_min, col_min) > std::tie(row, col))
             {
                 record_idx = idx;
@@ -497,8 +521,10 @@ void Matrix::SortRowWise(int row_index)
         if (record_idx == -1)
             break;
         string line;
-        getline(opened_files[record_idx], line);
-        fout << line << "\n";
+        fout << coordinates[record_idx][0] << " " << coordinates[record_idx][1] << " " << coordinates[record_idx][2] << "\n";
+        coordinates[record_idx][0] = -1;
+        coordinates[record_idx][1] = -1;
+        coordinates[record_idx][2] = -1;
     }
     for (auto &fp : opened_files)
         fp.close();
@@ -541,6 +567,7 @@ void Matrix::SortRowWise(int row_index)
     }
     remove(filename.c_str());
 }
+
 void Matrix::makePermanent()
 {
     logger.log("Matrix::makePermanent");
@@ -559,7 +586,7 @@ void Matrix::makePermanent()
         Page *cur_page = bufferManager.getPage(this->MatrixName, 0);
         int cur_page_number = 0, page_pointer = 0;
         int row_index, col_index;
-        if (this->columns[0] == "cols")
+        if (this->columns[0] == "columns")
         {
             // SortRowWise();
             row_index = 1;

@@ -110,7 +110,8 @@ void Page::writePage()
                 fout << " ";
             fout << this->rows[rowCounter][columnCounter];
         }
-        fout << endl;
+        if (rowCounter != this->rowCount)
+            fout << "\n";
     }
     fout.close();
 }

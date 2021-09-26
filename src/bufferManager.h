@@ -44,6 +44,7 @@ public:
     void deleteFile(string fileName);
     void writePage(const string &tableName, int pageIndex, const vector<vector<int>> &rows, int rowCount);
     void AppendPage(const string &matrix_name, int page_index, const vector<int> &row);
+    void PopPool();
 };
 
 #endif

@@ -442,6 +442,8 @@ bool comp2(const vector<int> &a, const vector<int> &b)
     return std::tie(a[0], a[1]) < std::tie(b[0], b[1]);
 }
 
+/*  [deprecated] efficient but not in place w.r.t disc
+
 void Matrix::SortRowWise(int row_index)
 {
 
@@ -566,6 +568,38 @@ void Matrix::SortRowWise(int row_index)
         page_number++;
     }
     remove(filename.c_str());
+}
+*/
+
+// fully inplace i.e. both w.r.t disc and ram.
+// but pretty slow
+void Matrix::SortRowWise(int row_index)
+{
+
+    for (int i = 0; i < this->blockCount; ++i)
+    {
+        Page *p_i = bufferManager.getPage(this->MatrixName, i);
+        for (int j = i + 1; j < this->blockCount; ++j)
+        {
+            Page *p_j = bufferManager.getPage(this->MatrixName, j);
+            for (auto &it : p_j->rows)
+                p_i->rows.push_back(it);
+            if (row_index == 1)
+                sort(p_i->rows.begin(), p_i->rows.end(), comp1);
+            else
+                sort(p_i->rows.begin(), p_i->rows.end(), comp2);
+            int n = p_j->rows.size();
+            for (int i = 0; i < n; i++)
+            {
+                p_j->rows[i] = p_i->rows.back();
+                p_i->rows.pop_back();
+            }
+            reverse(p_j->rows.begin(), p_j->rows.end());
+            p_j->writePage();
+            bufferManager.PopPool();
+        }
+        p_i->writePage();
+    }
 }
 
 void Matrix::makePermanent()
@@ -793,7 +827,7 @@ void Matrix::print()
             col_index = 1;
         }
         bool blocks_finished = false;
-        for (int i = 0; i < min(20, (int)this->rowCount); ++i)
+        for (int i = 0; i < min(PRINT_COUNT, this->rowCount); ++i)
         {
             for (int j = 0; j < this->columnCount; ++j)
             {
@@ -833,7 +867,7 @@ void Matrix::print()
         Page *cur_page = bufferManager.getPage(this->MatrixName, 0);
         int cur_page_number = 0;
 
-        for (int row = 0; row < min(20, (int)this->rowCount); ++row)
+        for (int row = 0; row < min(PRINT_COUNT, this->rowCount); ++row)
         {
             for (int col = 0; col < this->columnCount; ++col)
             {

@@ -281,3 +281,10 @@ void BufferManager::deleteFile(string tableName, int pageIndex)
     string fileName = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
     this->deleteFile(fileName);
 }
+
+void BufferManager::PopPool()
+{
+
+    delete this->pages.back();
+    this->pages.pop_back();
+}

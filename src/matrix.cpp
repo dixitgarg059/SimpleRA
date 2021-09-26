@@ -186,6 +186,11 @@ bool Matrix::CheckIfSparse()
                 count_zero++;
         }
     }
+    if(count_total == 0)
+    {
+        cout << "Empty matrix given\n";
+        exit(0);
+    }
     fin.close();
     double percentage = static_cast<double>(count_zero) / static_cast<double>(count_total);
     this->rowCount = sqrt(count_total);

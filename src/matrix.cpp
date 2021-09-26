@@ -617,6 +617,19 @@ void Matrix::makePermanent()
 
     if (is_sparse)
     {
+        if(this->blockCount==0)
+        {
+            for (int i = 0; i < min(PRINT_COUNT, this->rowCount); i++)
+            {
+                for (int j = 0; j < this->columnCount; j++)
+                {
+                    fout << 0;
+                    fout << ((j == this->columnCount - 1) ? "\n" : ",");
+                }
+                
+            }
+            return;
+        }
         Page *cur_page = bufferManager.getPage(this->MatrixName, 0);
         int cur_page_number = 0, page_pointer = 0;
         int row_index, col_index;
@@ -811,7 +824,19 @@ void Matrix::print()
 
     if (is_sparse)
     {
-
+        if(this->blockCount==0)
+        {
+            for (int i = 0; i < min(PRINT_COUNT, this->rowCount); i++)
+            {
+                for (int j = 0; j < this->columnCount; j++)
+                {
+                    cout << 0 << " ";
+                }
+                cout << "\n";
+                
+            }
+            return;
+        }
         Page *cur_page = bufferManager.getPage(this->MatrixName, 0);
         int cur_page_number = 0, page_pointer = 0;
         int row_index, col_index;

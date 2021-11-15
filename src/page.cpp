@@ -23,8 +23,8 @@ Page::Page()
  * loads the rows (or tuples) into a vector of rows (where each row is a vector
  * of integers).
  *
- * @param tableName 
- * @param pageIndex 
+ * @param tableName
+ * @param pageIndex
  */
 Page::Page(const string &tableName, int pageIndex)
 {
@@ -54,9 +54,9 @@ Page::Page(const string &tableName, int pageIndex)
 
 /**
  * @brief Get row from page indexed by rowIndex
- * 
- * @param rowIndex 
- * @return vector<int> 
+ *
+ * @param rowIndex
+ * @return vector<int>
  */
 vector<int> Page::getRow(int rowIndex)
 {
@@ -84,7 +84,7 @@ Page::Page(const string &tableName, int pageIndex, const vector<vector<int>> &ro
 
 /**
  * @brief writes current page contents to file.
- * 
+ *
  */
 
 // void Page::WritePageForMatrix()

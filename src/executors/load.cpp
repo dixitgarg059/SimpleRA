@@ -1,6 +1,6 @@
 #include "../global.h"
 /**
- * @brief 
+ * @brief
  * SYNTAX: LOAD relation_name
  */
 

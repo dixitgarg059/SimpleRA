@@ -2,60 +2,112 @@ BufferManager::BufferManager
 ParseQuery::clear
 
 Reading New Command: 
- LOAD MATRIX sparse-mat
+LOAD EMPLOYEE                                                                                                
 doCommand
 syntacticParse
-SyntacticParseLoadMatrix
+syntacticParseLOAD
 semanticParse
-SemanticParseLoadMatrix
+semanticParseLOAD
 TableCatalogue::isTable
-executeLOADMatrix
-Matrix::Matrix
-Matrix::load
-MatrixCatalogue::insertMatrix
+executeLOAD
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-PRINT MATRIX sparse-mat
+LOAD DEPARTMENT
 doCommand
 syntacticParse
-SyntacticParsePrintMatrix
+syntacticParseLOAD
 semanticParse
-SemanticParsePrintMatrix
-MatrixCatalogue::isMatrix
-ExecutePrintMatrix
-MatrixCatalogue::getMatrix
-inside print matrix function
+semanticParseLOAD
+TableCatalogue::isTable
+executeLOAD
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+TableCatalogue::~insertTable
+ParseQuery::clear
+
+Reading New Command: 
+Final <- JOIN EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn
+doCommand
+syntacticParse
+syntacticParseJOIN
+semanticParse
+semanticParseJOIN
+TableCatalogue::isTable
+TableCatalogue::isTable
+TableCatalogue::isTable
+TableCatalogue::isColumnFromTable
+TableCatalogue::isTable
+TableCatalogue::getTable
+Table::isColumn
+TableCatalogue::isColumnFromTable
+TableCatalogue::isTable
+TableCatalogue::getTable
+Table::isColumn
+TableCatalogue::getTable
+TableCatalogue::getTable
+Table::Table
+Table::printRow
+Table::printRow
+TableCatalogue::~insertTable
+TableCatalogue::getTable
+TableCatalogue::getTable
+Table::getColumnIndex
+Table::getColumnIndex
 TableCatalogue::getTable
 Page::Page
-ParseQuery::clear
-
-Reading New Command: 
-TRANSPOSE sparse-mat
-doCommand
-syntacticParse
-SyntacticParseTranspose
-semanticParse
-SemanticParseTranspose
-MatrixCatalogue::isMatrix
-ExecuteTranspose
-MatrixCatalogue::getMatrix
-inside the transpose function
+TableCatalogue::getTable
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
 Page::writePage
+executeJOIN
 ParseQuery::clear
 
 Reading New Command: 
-EXPORT MATRIX sparse-mat
+PRINT Final
 doCommand
 syntacticParse
-SyntacticParseExportMatrix
+syntacticParsePRINT
 semanticParse
-SemanticParseExportMatrix
-MatrixCatalogue::isMatrix
-ExecuteExportMatrix
-MatrixCatalogue::getMatrix
-Matrix::makePermanent
-Matrix::isPermanent
-ParseQuery::clear
-
-Reading New Command: 
+semanticParsePRINT
+TableCatalogue::isTable
+executePRINT
+TableCatalogue::getTable
+Table::print
+Table::printRow
+Cursor::Cursor
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Cursor::geNext
+Page::getRow
+Table::printRow
+Cursor::geNext
+Page::getRow
+Table::printRow
+Cursor::geNext
+Page::getRow
+Table::printRow
+MatrixCatalogue::~MatrixCatalogue
+TableCatalogue::~TableCatalogue
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+BufferManager::deleteFile: Success
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent

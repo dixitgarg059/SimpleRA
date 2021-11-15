@@ -1,0 +1,4 @@
+LOAD EMPLOYEE                                                                                                
+LOAD DEPARTMENT
+Final <- JOIN EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn
+PRINT Final

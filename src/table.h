@@ -40,7 +40,7 @@ public:
     void updateStatistics(vector<int> row);
     Table();
     Table(string tableName);
-    Table(string tableName, vector<string> columns);
+    Table(string tableName, vector<string> colgeumns);
     bool load();
     bool isColumn(string columnName);
     void renameColumn(string fromColumnName, string toColumnName);

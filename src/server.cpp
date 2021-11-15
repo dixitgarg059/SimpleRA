@@ -1,11 +1,11 @@
-//Server Code
+// Server Code
 
 #include "global.h"
 
 using namespace std;
 
 float BLOCK_SIZE = 8;
-uint BLOCK_COUNT = 2;
+uint BLOCK_COUNT = 4;
 uint PRINT_COUNT = 20;
 Logger logger;
 vector<string> tokenizedQuery;

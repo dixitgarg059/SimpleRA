@@ -8,9 +8,9 @@ BufferManager::BufferManager()
  * @brief Function called to read a page from the buffer manager. If the page is
  * not present in the pool, the page is read and then inserted into the pool.
  *
- * @param tableName 
- * @param pageIndex 
- * @return Page 
+ * @param tableName
+ * @param pageIndex
+ * @return Page
  */
 Page *BufferManager::getPage(const string &tableName, int pageIndex)
 {
@@ -50,9 +50,9 @@ Page *BufferManager::getPage(const string &tableName, int pageIndex, int pageRow
 /**
  * @brief Checks to see if a page exists in the pool
  *
- * @param pageName 
- * @return true 
- * @return false 
+ * @param pageName
+ * @return true
+ * @return false
  */
 bool BufferManager::inPool(const string &pageName)
 {
@@ -77,14 +77,14 @@ bool BufferManager::inPool2(const string &pageName, int rowNumber)
 }
 
 /**
- * 
- * 
+ *
+ *
  * @brief If the page is present in the pool, then this function returns the
  * page. Note that this function will fail if the page is not present in the
  * pool.
  *
- * @param pageName 
- * @return Page 
+ * @param pageName
+ * @return Page
  */
 Page *BufferManager::getFromPool(const string &pageName)
 {
@@ -105,11 +105,11 @@ Page *BufferManager::getFromPool2(const string &pageName, int rowNumber)
 /**
  * @brief Inserts page indicated by tableName and pageIndex into pool. If the
  * pool is full, the pool ejects the oldest inserted page from the pool and adds
- * the current page at the end. It naturally follows a queue data structure. 
+ * the current page at the end. It naturally follows a queue data structure.
  *
- * @param tableName 
- * @param pageIndex 
- * @return Page 
+ * @param tableName
+ * @param pageIndex
+ * @return Page
  */
 Page *BufferManager::insertIntoPool(const string &tableName, int pageIndex, bool is_matrix)
 {
@@ -214,10 +214,10 @@ Page *BufferManager::insertIntoPool2(const string &tableName, int pageIndex, int
  * @brief The buffer manager is also responsible for writing pages. This is
  * called when new tables are created using assignment statements.
  *
- * @param tableName 
- * @param pageIndex 
- * @param rows 
- * @param rowCount 
+ * @param tableName
+ * @param pageIndex
+ * @param rows
+ * @param rowCount
  */
 void BufferManager::writePage(const string &tableName, int pageIndex, const vector<vector<int>> &rows, int rowCount)
 {
@@ -225,8 +225,16 @@ void BufferManager::writePage(const string &tableName, int pageIndex, const vect
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
     ofstream fout(pageName, ios::trunc);
     int idx = 0;
+    int counter = -1;
     for (const auto &row : rows)
     {
+
+        if (++counter == rowCount)
+            break;
+
+        int sum = std::accumulate(row.begin(), row.end(), 0);
+        if (sum == 0)
+            cout << "yes";
         for (const auto &col : row)
             fout << col << " ";
         if (idx != rows.size() - 1)
@@ -238,7 +246,7 @@ void BufferManager::writePage(const string &tableName, int pageIndex, const vect
 
 /**
  * @brief Appends a row in the page, used in load matrix operation
- * 
+ *
  * */
 void BufferManager::AppendPage(const string &table_name, int page_index, const vector<int> &row)
 {
@@ -257,7 +265,7 @@ void BufferManager::AppendPage(const string &table_name, int page_index, const v
 /**
  * @brief Deletes file names fileName
  *
- * @param fileName 
+ * @param fileName
  */
 void BufferManager::deleteFile(string fileName)
 {
@@ -272,8 +280,8 @@ void BufferManager::deleteFile(string fileName)
  * @brief Overloaded function that calls deleteFile(fileName) by constructing
  * the fileName from the tableName and pageIndex.
  *
- * @param tableName 
- * @param pageIndex 
+ * @param tableName
+ * @param pageIndex
  */
 void BufferManager::deleteFile(string tableName, int pageIndex)
 {
@@ -287,4 +295,11 @@ void BufferManager::PopPool()
 
     delete this->pages.back();
     this->pages.pop_back();
+}
+
+void BufferManager::clear()
+{
+    for (auto it : this->pages)
+        delete it;
+    this->pages.clear();
 }

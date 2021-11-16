@@ -109,6 +109,14 @@ public:
 
     string sourceFileName = "";
 
+    string groupAttribute = "";
+    string groupRelationName = "";
+    string groupResultRelationName = "";
+    string groupAggregateOperator = "";
+    string groupAggregateAttribute = "";
+    
+
+
     ParsedQuery();
     void clear();
 };

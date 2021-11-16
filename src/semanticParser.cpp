@@ -41,6 +41,8 @@ bool semanticParse()
         return SemanticParseExportMatrix();
     case TRANSPOSE:
         return SemanticParseTranspose();
+    case GROUP_BY:
+         return semanticParseGROUPBY();
     default:
         cout << "SEMANTIC ERROR" << endl;
     }

@@ -22,5 +22,6 @@ bool SemanticParseLoadMatrix();
 bool SemanticParsePrintMatrix();
 bool SemanticParseExportMatrix();
 bool SemanticParseTranspose();
+bool semanticParseGROUPBY();
 // void hello();
 #endif

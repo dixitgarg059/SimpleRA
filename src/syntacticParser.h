@@ -26,6 +26,7 @@ enum QueryType
     PRINT_MATRIX,
     EXPORT_MATRIX,
     TRANSPOSE,
+    GROUP_BY,
     UNDETERMINED
 };
 
@@ -136,6 +137,7 @@ bool syntacticParseRENAME();
 bool syntacticParseSELECTION();
 bool syntacticParseSORT();
 bool syntacticParseSOURCE();
+bool syntacticParseGROUPBY();
 
 bool SyntacticParseLoadMatrix();
 bool SyntacticParsePrintMatrix();

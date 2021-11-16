@@ -5,57 +5,39 @@
  */
 bool syntacticParseGROUPBY()
 {
-    logger.log("syntacticParseJOIN");
-    // if (tokenizedQuery.size() != 9 || tokenizedQuery[5] != "ON")
-    // {
-    //     cout << "SYNTAC ERROR" << endl;
-    //     return false;
-    // }
-    parsedQuery.queryType = JOIN;
-    parsedQuery.groupAttribute = tokenizedQuery[0];
-    parsedQuery.groupRelationName = tokenizedQuery[3];
-    parsedQuery.groupResultRelationName = tokenizedQuery[4];
-    parsedQuery.groupAggregateOperator = tokenizedQuery[6];
-    parsedQuery.groupAggregateAttribute = tokenizedQuery[8];
-
-    // string binaryOperator = tokenizedQuery[7];
-    // if (binaryOperator == "<")
-    //     parsedQuery.joinBinaryOperator = LESS_THAN;
-    // else if (binaryOperator == ">")
-    //     parsedQuery.joinBinaryOperator = GREATER_THAN;
-    // else if (binaryOperator == ">=" || binaryOperator == "=>")
-    //     parsedQuery.joinBinaryOperator = GEQ;
-    // else if (binaryOperator == "<=" || binaryOperator == "=<")
-    //     parsedQuery.joinBinaryOperator = LEQ;
-    // else if (binaryOperator == "==")
-    //     parsedQuery.joinBinaryOperator = EQUAL;
-    // else if (binaryOperator == "!=")
-    //     parsedQuery.joinBinaryOperator = NOT_EQUAL;
-    // else
-    // {
-    //     cout << "SYNTAX ERROR" << endl;
-    //     return false;
-    // }
-    // return true;
+    logger.log("syntacticParseGROUPBY");
+    if (tokenizedQuery.size() != 10 || tokenizedQuery[3] != "BY")
+    {
+        cout << "SYNTAX ERROR" << endl;
+        return false;
+    }
+    parsedQuery.queryType = GROUP_BY;
+    parsedQuery.groupResultRelationName = tokenizedQuery[0];
+    parsedQuery.groupAttribute = tokenizedQuery[4];
+    parsedQuery.groupRelationName = tokenizedQuery[6];
+    parsedQuery.groupAggregateOperator = tokenizedQuery[8];
+    parsedQuery.groupAggregateAttribute = tokenizedQuery[9];
+    
+    return true;
 }
 
 bool semanticParseGROUPBY()
 {
-    logger.log("semanticParseJOIN");
+    logger.log("semanticParseGROUPBY");
 
-    if (tableCatalogue.isTable(parsedQuery.joinResultRelationName))
+    if (tableCatalogue.isTable(parsedQuery.groupResultRelationName))
     {
         cout << "SEMANTIC ERROR: Resultant relation already exists" << endl;
         return false;
     }
 
-    if (!tableCatalogue.isTable(parsedQuery.joinFirstRelationName) || !tableCatalogue.isTable(parsedQuery.joinSecondRelationName))
+    if (!tableCatalogue.isTable(parsedQuery.groupRelationName))
     {
         cout << "SEMANTIC ERROR: Relation doesn't exist" << endl;
         return false;
     }
 
-    if (!tableCatalogue.isColumnFromTable(parsedQuery.joinFirstColumnName, parsedQuery.joinFirstRelationName) || !tableCatalogue.isColumnFromTable(parsedQuery.joinSecondColumnName, parsedQuery.joinSecondRelationName))
+    if (!tableCatalogue.isColumnFromTable(parsedQuery.groupAttribute, parsedQuery.groupRelationName) || !tableCatalogue.isColumnFromTable(parsedQuery.groupAggregateAttribute, parsedQuery.groupRelationName))
     {
         cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
         return false;
@@ -63,7 +45,6 @@ bool semanticParseGROUPBY()
     return true;
 }
 
-#define min(a, b) (a > b ? b : a)
 namespace
 {
     void InsertRecordIntoPage(Page &p, const vector<int> &record, int &page_index, Table *final_table)
@@ -135,11 +116,12 @@ namespace
         {
             for(auto i: groupAggregateMap)
             {
-                i.second/= groupCount[i.first];
+                groupAggregateMap[i.first] /= groupCount[i.first];
             }
         }
         for(auto i: groupAggregateMap)
         {
+            cout << i.first << " " << i.second << "\n";
             vector<int> record;
             record.push_back(i.first);
             record.push_back(i.second);
@@ -147,7 +129,7 @@ namespace
         }
         if (!result.rows.empty())
         {
-
+            cout << result.rows.size();
             final_table->rowsPerBlockCount.push_back(result.rows.size());
             final_table->rowCount += result.rows.size();
             result.rowCount = result.rows.size();
@@ -169,8 +151,8 @@ void executeGROUPBY()
     result_columns.push_back(parsedQuery.groupAggregateOperator+parsedQuery.groupAggregateAttribute);
     Table *final_table = new Table(parsedQuery.groupResultRelationName, result_columns);
     tableCatalogue.insertTable(final_table);
-    GroupBy(parsedQuery.groupRelationName, parsedQuery.groupAttribute, parsedQuery.groupAggregateOperator, parsedQuery.groupResultRelationName,
-     parsedQuery.groupAggregateAttribute, final_table);
+    GroupBy(parsedQuery.groupRelationName, parsedQuery.groupAttribute, parsedQuery.groupAggregateOperator, parsedQuery.groupAggregateAttribute,
+    parsedQuery.groupResultRelationName, final_table);
     cout << "Grouped table";
     logger.log("executeJOIN");
     return;

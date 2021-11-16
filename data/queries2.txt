@@ -1,4 +1,4 @@
 LOAD EMPLOYEE                                                                                                
-LOAD DEPARTMENT
-Final <- JOIN EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn
+Final <- GROUP BY Sex FROM EMPLOYEE RETURN AVG Dno
 PRINT Final
+EXPORT Final

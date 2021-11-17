@@ -1,12 +1,13 @@
 #include "../global.h"
 /**
  * @brief
- * SYNTAX: R <- JOIN relation_name1, relation_name2 ON column_name1 bin_op column_name2
+ * SYNTAX: R <- <new_table> <- GROUP BY <grouping_attribute> FROM <table_name> RETURN
+MAX|MIN|SUM|AVG(<attribute>)
  */
 bool syntacticParseGROUPBY()
 {
     logger.log("syntacticParseGROUPBY");
-    if (tokenizedQuery.size() != 10 || tokenizedQuery[3] != "BY")
+    if (tokenizedQuery.size() != 9 || tokenizedQuery[3] != "BY" || tokenizedQuery[5] != "FROM" || tokenizedQuery[7] != "RETURN")
     {
         cout << "SYNTAX ERROR" << endl;
         return false;
@@ -15,9 +16,29 @@ bool syntacticParseGROUPBY()
     parsedQuery.groupResultRelationName = tokenizedQuery[0];
     parsedQuery.groupAttribute = tokenizedQuery[4];
     parsedQuery.groupRelationName = tokenizedQuery[6];
-    parsedQuery.groupAggregateOperator = tokenizedQuery[8];
-    parsedQuery.groupAggregateAttribute = tokenizedQuery[9];
-    
+
+    string s = tokenizedQuery[8];
+    if (s.size() < 6)
+    {
+        cout << "SYNTAX ERROR" << endl;
+        return false;
+    }
+    string s1 = s.substr(0, 3);
+    string s2 = s.substr(4, (int)s.size() - 5);
+    if (s[3] != '(' || s.back() != ')')
+    {
+        cout << "SYNTAX ERROR" << endl;
+        return false;
+    }
+    if (s1 != "MAX" and s1 != "MIN" and s1 != "AVG" and s1 != "SUM")
+    {
+        cout << "SYNTAX ERROR" << endl;
+        return false;
+    }
+
+    parsedQuery.groupAggregateOperator = s1;
+    parsedQuery.groupAggregateAttribute = s2;
+
     return true;
 }
 
@@ -67,21 +88,21 @@ namespace
     }
     void aggragationHelper(unordered_map<int, int> &m, unordered_map<int, int> &cnt, int key, int value, string op)
     {
-       
-       if(op == "MAX")
-       {
-           m[key] = max(m[key], value);
-       }
-       else if(op == "MIN")
-       {
-           m[key] = min(m[key], value);
-       } 
-       else if(op == "AVG" || op == "SUM")
-       {
-           m[key] += value;
-       }
-       cnt[key]++;
-       return;
+
+        if (op == "MAX")
+        {
+            m[key] = max(m[key], value);
+        }
+        else if (op == "MIN")
+        {
+            m[key] = min(m[key], value);
+        }
+        else if (op == "AVG" || op == "SUM")
+        {
+            m[key] += value;
+        }
+        cnt[key]++;
+        return;
     }
     void GroupBy(string groupRelationName, string groupAttributeName, string groupAggregateOperator, string groupAggregateAttributeName, string result_relation, Table *final_table)
     {
@@ -94,15 +115,14 @@ namespace
         Table *A = tableCatalogue.getTable(groupRelationName);
         int groupAttributeIndex = A->getColumnIndex(groupAttributeName);
         int aggregateAttributeIndex = A->getColumnIndex(groupAggregateAttributeName);
-        unordered_map <int, int> groupAggregateMap;
-        unordered_map <int, int> groupCount;
+        unordered_map<int, int> groupAggregateMap;
+        unordered_map<int, int> groupCount;
         int page_index = 0;
 
-        
         for (int i = 0; i < A->blockCount; i++)
         {
-            Page* page = bufferManager.getPage(groupRelationName, i);
-            int cnt=0;
+            Page *page = bufferManager.getPage(groupRelationName, i);
+            int cnt = 0;
             for (auto &record : page->rows)
             {
                 if (cnt++ == page->rowCount)
@@ -112,14 +132,14 @@ namespace
                 aggragationHelper(groupAggregateMap, groupCount, groupAttributeValue, aggregateAttributeValue, groupAggregateOperator);
             }
         }
-        if(groupAggregateOperator == "AVG")
+        if (groupAggregateOperator == "AVG")
         {
-            for(auto i: groupAggregateMap)
+            for (auto i : groupAggregateMap)
             {
                 groupAggregateMap[i.first] /= groupCount[i.first];
             }
         }
-        for(auto i: groupAggregateMap)
+        for (auto i : groupAggregateMap)
         {
             cout << i.first << " " << i.second << "\n";
             vector<int> record;
@@ -148,11 +168,11 @@ void executeGROUPBY()
 
     vector<string> result_columns;
     result_columns.push_back(parsedQuery.groupAttribute);
-    result_columns.push_back(parsedQuery.groupAggregateOperator+parsedQuery.groupAggregateAttribute);
+    result_columns.push_back(parsedQuery.groupAggregateOperator + parsedQuery.groupAggregateAttribute);
     Table *final_table = new Table(parsedQuery.groupResultRelationName, result_columns);
     tableCatalogue.insertTable(final_table);
     GroupBy(parsedQuery.groupRelationName, parsedQuery.groupAttribute, parsedQuery.groupAggregateOperator, parsedQuery.groupAggregateAttribute,
-    parsedQuery.groupResultRelationName, final_table);
+            parsedQuery.groupResultRelationName, final_table);
     cout << "Grouped table";
     logger.log("executeJOIN");
     return;

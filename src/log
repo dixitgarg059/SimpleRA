@@ -2,7 +2,7 @@ BufferManager::BufferManager
 ParseQuery::clear
 
 Reading New Command: 
-LOAD EMPLOYEE
+LOAD EMPLOYEE                                                                                                
 doCommand
 syntacticParse
 syntacticParseLOAD
@@ -18,54 +18,29 @@ TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-PRINT EMPLOYEE
+LOAD DEPARTMENT
 doCommand
 syntacticParse
-syntacticParsePRINT
+syntacticParseLOAD
 semanticParse
-semanticParsePRINT
+semanticParseLOAD
 TableCatalogue::isTable
-executePRINT
-TableCatalogue::getTable
-Table::print
-Table::printRow
-Cursor::Cursor
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
+executeLOAD
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-R <- GROUP BY Sex FROM EMPLOYEE RETURN SUM(Salary)
+Final <- JOIN EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn
 doCommand
 syntacticParse
-syntacticParseGROUPBY
+syntacticParseJOIN
 semanticParse
-semanticParseGROUPBY
+semanticParseJOIN
+TableCatalogue::isTable
 TableCatalogue::isTable
 TableCatalogue::isTable
 TableCatalogue::isColumnFromTable
@@ -76,19 +51,140 @@ TableCatalogue::isColumnFromTable
 TableCatalogue::isTable
 TableCatalogue::getTable
 Table::isColumn
+TableCatalogue::getTable
+TableCatalogue::getTable
 Table::Table
 Table::printRow
 Table::printRow
 TableCatalogue::~insertTable
 TableCatalogue::getTable
+TableCatalogue::getTable
 Table::getColumnIndex
 Table::getColumnIndex
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+TableCatalogue::~insertTable
+TableCatalogue::~insertTable
+TableCatalogue::getTable
+TableCatalogue::getTable
+Table::getColumnIndex
+Table::getColumnIndex
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
 Page::writePage
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+TableCatalogue::~insertTable
+TableCatalogue::~insertTable
+TableCatalogue::getTable
+TableCatalogue::getTable
+Table::getColumnIndex
+Table::getColumnIndex
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Page::writePage
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+TableCatalogue::~insertTable
+TableCatalogue::~insertTable
+TableCatalogue::getTable
+TableCatalogue::getTable
+Table::getColumnIndex
+Table::getColumnIndex
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Page::writePage
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
 executeJOIN
 ParseQuery::clear
 
 Reading New Command: 
-PRINT R
+PRINT Final
 doCommand
 syntacticParse
 syntacticParsePRINT
@@ -108,33 +204,64 @@ Page::getRow
 Table::printRow
 Cursor::geNext
 Page::getRow
+TableCatalogue::getTable
+Table::getNext
+Cursor::nextPage
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Page::getRow
 Table::printRow
-ParseQuery::clear
-
-Reading New Command: 
-> R <- GROUP BY Sex FROM EMPLOYEE RETURN SUM(Salary
-doCommand
-syntacticParse
-ParseQuery::clear
-
-Reading New Command: 
-> R <- GROUP BY Sex FROM EMPLOYEE RETURN SUM SALARY
-doCommand
-syntacticParse
-ParseQuery::clear
-
-Reading New Command: 
-> R <- GROUP BY Sex FROM EMPLOYEE RETURN SUM Salary
-doCommand
-syntacticParse
-ParseQuery::clear
-
-Reading New Command: 
-quit
-ParseQuery::clear
-
-Reading New Command: 
-exit
-ParseQuery::clear
-
-Reading New Command: 
+Cursor::geNext
+Page::getRow
+TableCatalogue::getTable
+Table::getNext
+Cursor::nextPage
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Page::getRow
+Table::printRow
+MatrixCatalogue::~MatrixCatalogue
+TableCatalogue::~TableCatalogue
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Err
+BufferManager::deleteFile
+BufferManager::deleteFile: Err
+Table::isPermanent
+BufferManager::deleteFile: Success
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent

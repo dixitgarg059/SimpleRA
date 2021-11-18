@@ -342,6 +342,11 @@ int Table::getColumnIndex(string columnName)
     logger.log("Table::getColumnIndex");
     for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++)
     {
+        if (this->columns.size() <= columnCounter)
+        {
+            cout << "hello";
+            continue;
+        }
         if (this->columns[columnCounter] == columnName)
             return columnCounter;
     }

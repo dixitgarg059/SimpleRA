@@ -151,6 +151,7 @@ namespace
         if (!result.rows.empty())
         {
 
+            cout << "inserted record";
             final_table->rowsPerBlockCount.push_back(result.rows.size());
             final_table->rowCount += result.rows.size();
             result.rowCount = result.rows.size();
@@ -237,8 +238,11 @@ namespace
         for (int i = 0; i < A->blockCount; i++)
         {
             Page *p = bufferManager.getPage(name1, i);
+            int cnt = 0;
             for (auto record : p->rows)
             {
+                if (cnt++ == p->rowCount)
+                    break;
 
                 int bucket_number = Hash(record[idx1]);
                 InsertRecordIntoPage2(buffers[bucket_number], record, filenameA[bucket_number]);
@@ -251,11 +255,14 @@ namespace
 
         for (int i = 0; i < B->blockCount; i++)
         {
-            Page *p = bufferManager.getPage(name1, i);
+            Page *p = bufferManager.getPage(name2, i);
+            int cnt = 0;
             for (auto record : p->rows)
             {
+                if (cnt++ == p->rowCount)
+                    break;
 
-                int bucket_number = Hash(record[idx1]);
+                int bucket_number = Hash(record[idx2]);
                 InsertRecordIntoPage2(buffers[bucket_number], record, filenameB[bucket_number]);
             }
         }
@@ -269,7 +276,6 @@ namespace
 
             string a = "Partition_A" + to_string(i);
             string b = "Partition_B" + to_string(i);
-            cout << a << " " << b << endl;
             Table *A = new Table(a);
             Table *B = new Table(b);
             if (A->load() && B->load())
@@ -277,6 +283,17 @@ namespace
                 tableCatalogue.insertTable(A);
                 tableCatalogue.insertTable(B);
             }
+            else
+                continue;
+            if (A->rowCount == 0 or B->rowCount == 0)
+            {
+                // cout << A->rowCount << " " << B->rowCount << "i = ";
+                // cout << i << endl;
+                continue;
+            }
+            // cout << a << " " << b << endl;
+            // continue;
+
             Join(a, b, column1, column2, result_relation, final_table);
         }
         return;

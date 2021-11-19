@@ -21,8 +21,11 @@ void executeCommand()
     case INDEX:
         executeINDEX();
         break;
-    case JOIN:
-        executeJOIN();
+    case JOIN_PART_HASH:
+        executeJOIN(1);
+        break;
+    case JOIN_BLOCK_NESTED:
+        executeJOIN(0);
         break;
     case LIST:
         executeLIST();

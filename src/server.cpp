@@ -5,8 +5,9 @@
 using namespace std;
 
 float BLOCK_SIZE = 8;
-uint BLOCK_COUNT = 4;
+uint BLOCK_COUNT = 2;
 uint PRINT_COUNT = 20;
+uint nB = 10;
 Logger logger;
 vector<string> tokenizedQuery;
 ParsedQuery parsedQuery;

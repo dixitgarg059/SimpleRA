@@ -8,7 +8,7 @@ void executeCROSS();
 void executeDISTINCT();
 void executeEXPORT();
 void executeINDEX();
-void executeJOIN();
+void executeJOIN(int ch);
 void executeGROUPBY();
 void executeLIST();
 void executeLOAD();

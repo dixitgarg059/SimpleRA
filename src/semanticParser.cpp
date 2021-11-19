@@ -15,7 +15,9 @@ bool semanticParse()
         return semanticParseEXPORT();
     case INDEX:
         return semanticParseINDEX();
-    case JOIN:
+    case JOIN_PART_HASH:
+        return semanticParseJOIN();
+    case JOIN_BLOCK_NESTED:
         return semanticParseJOIN();
     case LIST:
         return semanticParseLIST();
@@ -42,7 +44,7 @@ bool semanticParse()
     case TRANSPOSE:
         return SemanticParseTranspose();
     case GROUP_BY:
-         return semanticParseGROUPBY();
+        return semanticParseGROUPBY();
     default:
         cout << "SEMANTIC ERROR" << endl;
     }

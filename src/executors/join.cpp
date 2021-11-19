@@ -1,41 +1,43 @@
 #include "../global.h"
 /**
  * @brief
- * SYNTAX: R <- JOIN relation_name1, relation_name2 ON column_name1 bin_op column_name2
+ * SYNTAX: R <- JOIN Using type relation_name1, relation_name2 ON column_name1 bin_op column_name2
  */
+
+namespace
+{
+
+    bool check_syntax(const vector<string> &tq)
+    {
+        if (tq.size() != 13)
+            return false;
+        vector<string> syntax_vector_actual = {"<-", "JOIN", "USING", "ON", "==", "BUFFER"};
+        vector<string> syntax_vector_got = {tq[1], tq[2], tq[3], tq[7], tq[9], tq[11]};
+        return syntax_vector_actual == syntax_vector_got;
+    }
+}
 bool syntacticParseJOIN()
 {
     logger.log("syntacticParseJOIN");
-    if (tokenizedQuery.size() != 9 || tokenizedQuery[5] != "ON")
-    {
-        cout << "SYNTAC ERROR" << endl;
-        return false;
-    }
-    parsedQuery.queryType = JOIN;
-    parsedQuery.joinResultRelationName = tokenizedQuery[0];
-    parsedQuery.joinFirstRelationName = tokenizedQuery[3];
-    parsedQuery.joinSecondRelationName = tokenizedQuery[4];
-    parsedQuery.joinFirstColumnName = tokenizedQuery[6];
-    parsedQuery.joinSecondColumnName = tokenizedQuery[8];
-
-    string binaryOperator = tokenizedQuery[7];
-    if (binaryOperator == "<")
-        parsedQuery.joinBinaryOperator = LESS_THAN;
-    else if (binaryOperator == ">")
-        parsedQuery.joinBinaryOperator = GREATER_THAN;
-    else if (binaryOperator == ">=" || binaryOperator == "=>")
-        parsedQuery.joinBinaryOperator = GEQ;
-    else if (binaryOperator == "<=" || binaryOperator == "=<")
-        parsedQuery.joinBinaryOperator = LEQ;
-    else if (binaryOperator == "==")
-        parsedQuery.joinBinaryOperator = EQUAL;
-    else if (binaryOperator == "!=")
-        parsedQuery.joinBinaryOperator = NOT_EQUAL;
-    else
+    if (!check_syntax(tokenizedQuery))
     {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
+
+    auto &tq = tokenizedQuery;
+
+    if (tq[4] == "NESTED")
+        parsedQuery.queryType = JOIN_BLOCK_NESTED;
+    else
+        parsedQuery.queryType = JOIN_PART_HASH;
+
+    parsedQuery.joinResultRelationName = tq[0];
+    parsedQuery.joinFirstRelationName = tq[5];
+    parsedQuery.joinSecondRelationName = tq[6];
+    parsedQuery.joinFirstColumnName = tq[8];
+    parsedQuery.joinSecondColumnName = tq[10];
+    parsedQuery.joinBinaryOperator = EQUAL;
     return true;
 }
 
@@ -66,7 +68,7 @@ bool semanticParseJOIN()
 #define min(a, b) (a > b ? b : a)
 namespace
 {
-    void InsertRecordIntoPage(Page &p, const vector<int> &record1, const vector<int> &record2, int &page_index, Table *final_table)
+    bool InsertRecordIntoPage(Page &p, const vector<int> &record1, const vector<int> &record2, int &page_index, Table *final_table)
     {
         vector<int> record = record1;
         for (auto it : record2)
@@ -85,9 +87,11 @@ namespace
             p.columnCount = 0;
             final_table->blockCount++;
             final_table->rowsPerBlockCount.push_back(BLOCK_SIZE);
+            return true;
         }
+        return false;
     }
-    void Join(string name1, string name2, string column1, string column2, string result_relation, Table *final_table)
+    int Join(string name1, string name2, string column1, string column2, string result_relation, Table *final_table)
     {
 
         Page result = Page();
@@ -95,18 +99,27 @@ namespace
         vector<Page *> outer;
         int idx = 0;
 
-        Table *B = tableCatalogue.getTable(name2);
         Table *A = tableCatalogue.getTable(name1);
+        Table *B = tableCatalogue.getTable(name2);
+        if (A->rowCount > B->rowCount)
+        {
+            swap(name1, name2);
+            swap(column1, column2);
+            swap(A, B);
+        }
         int idx1 = A->getColumnIndex(column1);
         int idx2 = B->getColumnIndex(column2);
 
         int page_index = 0;
+        int block_accesses = 0;
         while (1)
         {
 
             for (int i = 0; i < min(BLOCK_COUNT - 2, A->blockCount - idx); i++)
             {
-                outer.push_back(bufferManager.getPage(name1, idx));
+                Page p = *bufferManager.getPage(name1, idx);
+                block_accesses++;
+                outer.push_back(&p);
                 idx++;
             }
             if (outer.empty())
@@ -114,6 +127,7 @@ namespace
             for (int i = 0; i < B->blockCount; i++)
             {
                 Page *p = bufferManager.getPage(name2, i);
+                block_accesses++;
                 int cnt1 = 0;
                 for (auto &record2 : p->rows)
                 {
@@ -138,38 +152,42 @@ namespace
                             int val1 = record1[idx1];
                             if (val1 == val2)
                             {
-                                InsertRecordIntoPage(result, record1, record2, page_index, final_table);
+                                if (InsertRecordIntoPage(result, record1, record2, page_index, final_table))
+                                    block_accesses++;
                             }
                         }
                     }
                 }
-                bufferManager.PopPool();
             }
-            bufferManager.clear();
+            // bufferManager.clear();
             outer.clear();
         }
         if (!result.rows.empty())
         {
 
-            cout << "inserted record";
+            // cout << "inserted record";
             final_table->rowsPerBlockCount.push_back(result.rows.size());
             final_table->rowCount += result.rows.size();
             result.rowCount = result.rows.size();
             result.columnCount = result.rows[0].size();
             result.pageName = "../data/temp/" + result.tableName + "_Page" + to_string(page_index);
             result.writePage();
+            block_accesses++;
             result.rows.clear();
             final_table->blockCount++;
         }
 
-        return;
+        // cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
+        return block_accesses;
     }
 
-#define M 10
+    const int M = nB - 1;
 
-    void clear_buffer(Page *p, const string &filename)
+    bool clear_buffer(Page *p, const string &filename)
     {
 
+        if (p->rows.empty())
+            return false;
         ofstream fout(filename, ios::app);
         for (auto row : p->rows)
         {
@@ -183,22 +201,24 @@ namespace
         }
         fout.close();
         p->rows.clear();
+        return true;
     }
 
-    void InsertRecordIntoPage2(Page *p, vector<int> &record, const string &filename)
+    bool InsertRecordIntoPage2(Page *p, vector<int> &record, const string &filename)
     {
         p->rows.push_back(record);
         if (p->rows.size() == BLOCK_SIZE)
         {
-            clear_buffer(p, filename);
+            return clear_buffer(p, filename);
         }
+        return false;
     }
     int Hash(int r)
     {
         return r % M;
     }
 
-    void partitionJoin(string name1, string name2, string column1, string column2, string result_relation, Table *final_table)
+    int partitionJoin(string name1, string name2, string column1, string column2, string result_relation, Table *final_table)
     {
         Table *A = tableCatalogue.getTable(name1);
         Table *B = tableCatalogue.getTable(name2);
@@ -207,6 +227,7 @@ namespace
 
         vector<Page *> buffers(M);
         vector<string> filenameA(M), filenameB(M);
+        int block_accesses = 0;
         for (int i = 0; i < M; i++)
         {
             filenameA[i] = "../data/Partition_A" + to_string(i) + ".csv";
@@ -238,6 +259,7 @@ namespace
         for (int i = 0; i < A->blockCount; i++)
         {
             Page *p = bufferManager.getPage(name1, i);
+            block_accesses++;
             int cnt = 0;
             for (auto record : p->rows)
             {
@@ -245,17 +267,20 @@ namespace
                     break;
 
                 int bucket_number = Hash(record[idx1]);
-                InsertRecordIntoPage2(buffers[bucket_number], record, filenameA[bucket_number]);
+                if (InsertRecordIntoPage2(buffers[bucket_number], record, filenameA[bucket_number]))
+                    block_accesses++;
             }
         }
         for (int i = 0; i < M; i++)
         {
-            clear_buffer(buffers[i], filenameA[i]);
+            if (clear_buffer(buffers[i], filenameA[i]))
+                block_accesses++;
         }
 
         for (int i = 0; i < B->blockCount; i++)
         {
             Page *p = bufferManager.getPage(name2, i);
+            block_accesses++;
             int cnt = 0;
             for (auto record : p->rows)
             {
@@ -263,12 +288,14 @@ namespace
                     break;
 
                 int bucket_number = Hash(record[idx2]);
-                InsertRecordIntoPage2(buffers[bucket_number], record, filenameB[bucket_number]);
+                if (InsertRecordIntoPage2(buffers[bucket_number], record, filenameB[bucket_number]))
+                    block_accesses++;
             }
         }
         for (int i = 0; i < M; i++)
         {
-            clear_buffer(buffers[i], filenameB[i]);
+            if (clear_buffer(buffers[i], filenameB[i]))
+                block_accesses++;
         }
 
         for (int i = 0; i < M; i++)
@@ -294,12 +321,12 @@ namespace
             // cout << a << " " << b << endl;
             // continue;
 
-            Join(a, b, column1, column2, result_relation, final_table);
+            block_accesses += Join(a, b, column1, column2, result_relation, final_table);
         }
-        return;
+        return block_accesses;
     }
 }
-void executeJOIN()
+void executeJOIN(int ch)
 {
 
     Table *A = tableCatalogue.getTable(parsedQuery.joinFirstRelationName);
@@ -309,8 +336,17 @@ void executeJOIN()
         result_columns.push_back(it);
     Table *final_table = new Table(parsedQuery.joinResultRelationName, result_columns);
     tableCatalogue.insertTable(final_table);
-    partitionJoin(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table);
-    cout << "joined table";
+    if (ch == 0)
+    {
+        int block_accesses = Join(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table);
+        cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
+    }
+    else
+    {
+        int block_accesses = partitionJoin(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table);
+        cout << "Done partition join\n No. of block accesses  = " << block_accesses << endl;
+    }
+
     logger.log("executeJOIN");
     return;
 }

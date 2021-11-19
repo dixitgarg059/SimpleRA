@@ -13,7 +13,6 @@ enum QueryType
     DISTINCT,
     EXPORT,
     INDEX,
-    JOIN,
     LIST,
     LOAD,
     PRINT,
@@ -27,6 +26,8 @@ enum QueryType
     EXPORT_MATRIX,
     TRANSPOSE,
     GROUP_BY,
+    JOIN_PART_HASH,
+    JOIN_BLOCK_NESTED,
     UNDETERMINED
 };
 
@@ -115,8 +116,6 @@ public:
     string groupResultRelationName = "";
     string groupAggregateOperator = "";
     string groupAggregateAttribute = "";
-    
-
 
     ParsedQuery();
     void clear();

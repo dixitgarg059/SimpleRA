@@ -32,7 +32,7 @@ bool syntacticParseGROUPBY()
     }
     if (s1 != "MAX" and s1 != "MIN" and s1 != "AVG" and s1 != "SUM")
     {
-        cout << "SYNTAX ERROR" << endl;
+        cout << "SYNTAX ERROR: Invalid Aggregate Operation" << endl;
         return false;
     }
 
@@ -68,11 +68,12 @@ bool semanticParseGROUPBY()
 
 namespace
 {
-    void InsertRecordIntoPage(Page &p, const vector<int> &record, int &page_index, Table *final_table)
+    void InsertRecordIntoPage(Page &p, const vector<int> &record, int &page_index, Table *final_table, int &block_access)
     {
         p.rows.push_back(record);
         if (p.rows.size() == BLOCK_SIZE)
         {
+
             final_table->rowCount += p.rows.size();
             p.rowCount = p.rows.size();
             p.columnCount = p.rows[0].size();
@@ -84,44 +85,46 @@ namespace
             p.columnCount = 0;
             final_table->blockCount++;
             final_table->rowsPerBlockCount.push_back(BLOCK_SIZE);
+            block_access++;
         }
     }
-    void aggragationHelper(unordered_map<int, int> &m, unordered_map<int, int> &cnt, int key, int value, string op)
+    void aggragationHelper(unordered_map<int, pair<int, int>> &m, int key, int value, string op)
     {
 
         if (op == "MAX")
         {
-            m[key] = max(m[key], value);
+            m[key].first = max(m[key].first, value);
         }
         else if (op == "MIN")
         {
-            m[key] = min(m[key], value);
+            m[key].first = min(m[key].first, value);
         }
         else if (op == "AVG" || op == "SUM")
         {
-            m[key] += value;
+            m[key].first += value;
         }
-        cnt[key]++;
+        m[key].second++;
         return;
     }
-    void GroupBy(string groupRelationName, string groupAttributeName, string groupAggregateOperator, string groupAggregateAttributeName, string result_relation, Table *final_table)
+    int GroupBy(string groupRelationName, string groupAttributeName, string groupAggregateOperator, string groupAggregateAttributeName, string result_relation, Table *final_table)
     {
 
         Page result = Page();
         result.tableName = result_relation;
         vector<Page *> outer;
         int idx = 0;
+        int block_access = 0;
 
         Table *A = tableCatalogue.getTable(groupRelationName);
         int groupAttributeIndex = A->getColumnIndex(groupAttributeName);
         int aggregateAttributeIndex = A->getColumnIndex(groupAggregateAttributeName);
-        unordered_map<int, int> groupAggregateMap;
-        unordered_map<int, int> groupCount;
+        unordered_map<int, pair<int, int> > groupAggregateMap;
         int page_index = 0;
 
         for (int i = 0; i < A->blockCount; i++)
         {
             Page *page = bufferManager.getPage(groupRelationName, i);
+            block_access++;
             int cnt = 0;
             for (auto &record : page->rows)
             {
@@ -129,23 +132,22 @@ namespace
                     break;
                 int groupAttributeValue = record[groupAttributeIndex];
                 int aggregateAttributeValue = record[aggregateAttributeIndex];
-                aggragationHelper(groupAggregateMap, groupCount, groupAttributeValue, aggregateAttributeValue, groupAggregateOperator);
+                aggragationHelper(groupAggregateMap, groupAttributeValue, aggregateAttributeValue, groupAggregateOperator);
             }
         }
         if (groupAggregateOperator == "AVG")
         {
             for (auto i : groupAggregateMap)
             {
-                groupAggregateMap[i.first] /= groupCount[i.first];
+                groupAggregateMap[i.first].first /= groupAggregateMap[i.first].second;
             }
         }
         for (auto i : groupAggregateMap)
         {
-            cout << i.first << " " << i.second << "\n";
             vector<int> record;
             record.push_back(i.first);
-            record.push_back(i.second);
-            InsertRecordIntoPage(result, record, page_index, final_table);
+            record.push_back(i.second.first);
+            InsertRecordIntoPage(result, record, page_index, final_table, block_access);
         }
         if (!result.rows.empty())
         {
@@ -158,8 +160,9 @@ namespace
             result.writePage();
             result.rows.clear();
             final_table->blockCount++;
+            block_access++;
         }
-        return;
+        return block_access;
     }
 
 }
@@ -171,9 +174,9 @@ void executeGROUPBY()
     result_columns.push_back(parsedQuery.groupAggregateOperator + parsedQuery.groupAggregateAttribute);
     Table *final_table = new Table(parsedQuery.groupResultRelationName, result_columns);
     tableCatalogue.insertTable(final_table);
-    GroupBy(parsedQuery.groupRelationName, parsedQuery.groupAttribute, parsedQuery.groupAggregateOperator, parsedQuery.groupAggregateAttribute,
+    int block_accesses = GroupBy(parsedQuery.groupRelationName, parsedQuery.groupAttribute, parsedQuery.groupAggregateOperator, parsedQuery.groupAggregateAttribute,
             parsedQuery.groupResultRelationName, final_table);
-    cout << "Grouped table";
+    std::cout << "Done Group By\n No. of block accesses  = " << block_accesses << endl;
     logger.log("executeJOIN");
     return;
 }

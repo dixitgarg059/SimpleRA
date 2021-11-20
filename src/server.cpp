@@ -4,7 +4,7 @@
 
 using namespace std;
 
-float BLOCK_SIZE = 8;
+float BLOCK_SIZE = 1;
 uint BLOCK_COUNT = 2;
 uint PRINT_COUNT = 20;
 uint nB = 10;

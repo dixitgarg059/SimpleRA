@@ -1,4 +1,4 @@
 LOAD EMPLOYEE                                                                                                
 LOAD DEPARTMENT
-Final <- JOIN EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn
+Final <- JOIN USING PARTITIONHASH EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn BUFFER 10
 PRINT Final

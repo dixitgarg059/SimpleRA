@@ -91,12 +91,14 @@ namespace
         }
         return false;
     }
+    using Record = vector<int>;
     int Join(string name1, string name2, string column1, string column2, string result_relation, Table *final_table)
     {
 
         Page result = Page();
         result.tableName = result_relation;
-        vector<Page *> outer;
+
+        unordered_map<int, vector<Record>> outer;
         int idx = 0;
 
         Table *A = tableCatalogue.getTable(name1);
@@ -115,11 +117,18 @@ namespace
         while (1)
         {
 
-            for (int i = 0; i < min(BLOCK_COUNT - 2, A->blockCount - idx); i++)
+            for (int i = 0; i < min(nB - 2, A->blockCount - idx); i++)
             {
-                Page p = *bufferManager.getPage(name1, idx);
-                block_accesses++;
-                outer.push_back(&p);
+                Page *p = bufferManager.getPage(name1, idx);
+
+                int cnt = 0;
+                for (const auto &record : p->rows)
+                {
+                    if (cnt++ == p->rowCount)
+                        break;
+                    outer[record[idx1]].push_back(record);
+                }
+
                 idx++;
             }
             if (outer.empty())
@@ -138,28 +147,13 @@ namespace
                         continue;
                     int val2 = record2[idx2];
 
-                    for (const auto &page : outer)
+                    for (auto record1 : outer[val2])
                     {
-
-                        int cnt = 0;
-                        for (auto &record1 : page->rows)
-                        {
-
-                            if (cnt++ == page->rowCount)
-                                break;
-                            if (record1.size() <= idx1)
-                                continue;
-                            int val1 = record1[idx1];
-                            if (val1 == val2)
-                            {
-                                if (InsertRecordIntoPage(result, record1, record2, page_index, final_table))
-                                    block_accesses++;
-                            }
-                        }
+                        if (InsertRecordIntoPage(result, record1, record2, page_index, final_table))
+                            block_accesses++;
                     }
                 }
             }
-            // bufferManager.clear();
             outer.clear();
         }
         if (!result.rows.empty())

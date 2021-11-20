@@ -13,7 +13,6 @@ Page::Page()
     this->rows.clear();
     this->row.clear();
 }
-
 /**
  * @brief Construct a new Page:: Page object given the table name and page
  * index. When tables are loaded they are broken up into blocks of BLOCK_SIZE

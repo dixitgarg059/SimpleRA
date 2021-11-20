@@ -6,6 +6,7 @@
 extern float BLOCK_SIZE;
 extern uint BLOCK_COUNT;
 extern uint PRINT_COUNT;
+extern uint nB;
 extern std::vector<std::string> tokenizedQuery;
 extern ParsedQuery parsedQuery;
 extern TableCatalogue tableCatalogue;

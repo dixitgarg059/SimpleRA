@@ -2,7 +2,7 @@ BufferManager::BufferManager
 ParseQuery::clear
 
 Reading New Command: 
-LOAD EMPLOYEE
+LOAD EMPLOYEE                                                                                                
 doCommand
 syntacticParse
 syntacticParseLOAD
@@ -166,78 +166,125 @@ TableCatalogue::getTable
 TableCatalogue::getTable
 Page::Page
 TableCatalogue::getTable
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+TableCatalogue::~insertTable
+TableCatalogue::~insertTable
+TableCatalogue::getTable
+TableCatalogue::getTable
+Table::getColumnIndex
+Table::getColumnIndex
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::Table
+Table::Table
+Table::load
+Table::extractColumnNames
+Table::blockify
+Table::load
+Table::extractColumnNames
+Table::blockify
+TableCatalogue::~insertTable
+TableCatalogue::~insertTable
+TableCatalogue::getTable
+TableCatalogue::getTable
+Table::getColumnIndex
+Table::getColumnIndex
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
 Page::writePage
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-TableCatalogue::~insertTable
-TableCatalogue::~insertTable
-TableCatalogue::getTable
-TableCatalogue::getTable
-Table::getColumnIndex
-Table::getColumnIndex
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Page::writePage
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-TableCatalogue::~insertTable
-TableCatalogue::~insertTable
-TableCatalogue::getTable
-TableCatalogue::getTable
-Table::getColumnIndex
-Table::getColumnIndex
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Page::writePage
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
 executeJOIN
 ParseQuery::clear
 
 Reading New Command: 
+PRINT Final
+doCommand
+syntacticParse
+syntacticParsePRINT
+semanticParse
+semanticParsePRINT
+TableCatalogue::isTable
+executePRINT
+TableCatalogue::getTable
+Table::print
+Table::printRow
+Cursor::Cursor
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Cursor::geNext
+Page::getRow
+Table::printRow
+Cursor::geNext
+Page::getRow
+Table::printRow
+Cursor::geNext
+Page::getRow
+Table::printRow
+ParseQuery::clear
 
+Reading New Command: 
+EXPORT Final
+doCommand
+syntacticParse
+syntacticParseEXPORT
+semanticParse
+semanticParseEXPORT
+TableCatalogue::isTable
+executeEXPORT
+TableCatalogue::getTable
+Table::makePermanent
+Table::isPermanent
+BufferManager::deleteFile: Err
+Table::printRow
+Cursor::Cursor
+Cursor::geNext
+Page::getRow
+Table::printRow
+Cursor::geNext
+Page::getRow
+Table::printRow
+Cursor::geNext
+Page::getRow
+Table::printRow
 MatrixCatalogue::~MatrixCatalogue
 TableCatalogue::~TableCatalogue
 Table::~unload
@@ -259,10 +306,6 @@ Table::isPermanent
 Table::~unload
 BufferManager::deleteFile
 BufferManager::deleteFile: Success
-BufferManager::deleteFile
-BufferManager::deleteFile: Err
-BufferManager::deleteFile
-BufferManager::deleteFile: Err
 Table::isPermanent
 BufferManager::deleteFile: Err
 Table::~unload

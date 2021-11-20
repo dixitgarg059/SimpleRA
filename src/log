@@ -34,7 +34,7 @@ TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-Final <- JOIN USING PARTHASH EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn BUFFER 10
+Final <- JOIN USING NESTED EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn BUFFER 10
 doCommand
 syntacticParse
 syntacticParseJOIN
@@ -67,169 +67,6 @@ TableCatalogue::getTable
 TableCatalogue::getTable
 Page::Page
 TableCatalogue::getTable
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::~unload
-Table::isPermanent
-Table::~unload
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-TableCatalogue::~insertTable
-TableCatalogue::~insertTable
-TableCatalogue::getTable
-TableCatalogue::getTable
-Table::getColumnIndex
-Table::getColumnIndex
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-TableCatalogue::~insertTable
-TableCatalogue::~insertTable
-TableCatalogue::getTable
-TableCatalogue::getTable
-Table::getColumnIndex
-Table::getColumnIndex
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::Table
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-Table::load
-Table::extractColumnNames
-Table::blockify
-TableCatalogue::~insertTable
-TableCatalogue::~insertTable
-TableCatalogue::getTable
-TableCatalogue::getTable
-Table::getColumnIndex
-Table::getColumnIndex
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-Table::isPermanent
 Page::writePage
 executeJOIN
 ParseQuery::clear
@@ -289,36 +126,12 @@ MatrixCatalogue::~MatrixCatalogue
 TableCatalogue::~TableCatalogue
 Table::~unload
 BufferManager::deleteFile
-BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
 BufferManager::deleteFile: Success
 Table::isPermanent
 BufferManager::deleteFile: Err
 Table::~unload
 BufferManager::deleteFile
-BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
 BufferManager::deleteFile: Success
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Err
 Table::isPermanent
 Table::~unload
 BufferManager::deleteFile

@@ -1,5 +1,5 @@
 LOAD EMPLOYEE                                                                                                
 LOAD DEPARTMENT
-Final <- JOIN USING PARTHASH EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn BUFFER 10
+Final <- JOIN USING NESTED EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn BUFFER 10
 PRINT Final
 EXPORT Final

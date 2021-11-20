@@ -1,4 +1,4 @@
-Ssn, Bdate, Sex, Salary, Super_ssn, Dno, Dnumber, Mgr_ssn, Mgr_start_date
-6, 551208, 0, 40000, 8, 5, 5, 6, 880522
-7, 551208, 1, 43000, 8, 4, 4, 7, 950101
-8, 720731, 0, 55000, 0, 1, 1, 8, 810619
+Dnumber, Mgr_ssn, Mgr_start_date, Ssn, Bdate, Sex, Salary, Super_ssn, Dno
+5, 6, 880522, 6, 551208, 0, 40000, 8, 5
+4, 7, 950101, 7, 551208, 1, 43000, 8, 4
+1, 8, 810619, 8, 720731, 0, 55000, 0, 1

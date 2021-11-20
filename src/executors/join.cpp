@@ -108,21 +108,25 @@ namespace
     int Join(string name1, string name2, string column1, string column2, string result_relation, Table *final_table, int &page_index, Page &result, bool not_called_by_partition_hash = true)
     {
 
-        // Page result = Page();
-        // result.tableName = result_relation;
-
         unordered_map<int, vector<Record>> outer;
         int idx = 0;
 
         Table *A = tableCatalogue.getTable(name1);
         Table *B = tableCatalogue.getTable(name2);
-        // TODO
-        //  if (A->rowCount > B->rowCount)
-        //  {
-        //      swap(name1, name2);
-        //      swap(column1, column2);
-        //      swap(A, B);
-        //  }
+        if (A->rowCount > B->rowCount)
+        {
+
+            final_table->columns.clear();
+            auto &new_columns = final_table->columns;
+            for (auto it : B->columns)
+                new_columns.push_back(it);
+            for (auto it : A->columns)
+                new_columns.push_back(it);
+
+            swap(name1, name2);
+            swap(column1, column2);
+            swap(A, B);
+        }
         int idx1 = A->getColumnIndex(column1);
         int idx2 = B->getColumnIndex(column2);
 
@@ -133,7 +137,7 @@ namespace
             for (int i = 0; i < min(nB - 2, A->blockCount - idx); i++)
             {
                 Page *p = bufferManager.getPage(name1, idx);
-
+                block_accesses++;
                 int cnt = 0;
                 for (const auto &record : p->rows)
                 {

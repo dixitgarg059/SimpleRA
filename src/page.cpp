@@ -1,6 +1,29 @@
 #include "global.h"
+
+namespace
+{
+
+    void WritePageHelper(const Page *p, ostream &fout)
+    {
+        for (int rowCounter = 0; rowCounter < p->rowCount; rowCounter++)
+        {
+            for (int columnCounter = 0; columnCounter < p->columnCount; columnCounter++)
+            {
+                if (columnCounter != 0)
+                    fout << " ";
+                fout << p->rows[rowCounter][columnCounter];
+            }
+            if (rowCounter != p->rowCount)
+                fout << "\n";
+        }
+    }
+
+}
+
 /**
  * @brief Construct a new Page object. Never used as part of the code
+ *
+ *
  *
  */
 Page::Page()
@@ -97,21 +120,20 @@ Page::Page(const string &tableName, int pageIndex, const vector<vector<int>> &ro
 //     }
 //     fout.close();
 // }
+
 void Page::writePage()
 {
     logger.log("Page::writePage");
     ofstream fout(this->pageName, ios::trunc);
-    for (int rowCounter = 0; rowCounter < this->rowCount; rowCounter++)
-    {
-        for (int columnCounter = 0; columnCounter < this->columnCount; columnCounter++)
-        {
-            if (columnCounter != 0)
-                fout << " ";
-            fout << this->rows[rowCounter][columnCounter];
-        }
-        if (rowCounter != this->rowCount)
-            fout << "\n";
-    }
+    WritePageHelper(this, fout);
+    fout.close();
+}
+
+void Page::writePage(int ch)
+{
+    logger.log("Page::writePage");
+    ofstream fout(this->pageName, (ch ? ios::app : ios::trunc));
+    WritePageHelper(this, fout);
     fout.close();
 }
 

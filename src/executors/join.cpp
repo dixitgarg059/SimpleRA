@@ -178,11 +178,10 @@ namespace
             result.rowCount = result.rows.size();
             result.columnCount = result.rows[0].size();
             result.pageName = "../data/temp/" + result.tableName + "_Page" + to_string(page_index);
-            result.writePage();
+            result.writePage(1);
             block_accesses++;
             result.rows.clear();
             final_table->blockCount++;
-            page_index++;
         }
 
         // cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
@@ -320,17 +319,16 @@ namespace
                 tableCatalogue.insertTable(B);
             }
             else
-                continue;
+                goto Continue;
             if (A->rowCount == 0 or B->rowCount == 0)
-            {
-                // cout << A->rowCount << " " << B->rowCount << "i = ";
-                // cout << i << endl;
-                continue;
-            }
-            // cout << a << " " << b << endl;
-            // continue;
+                goto Continue;
 
             block_accesses += Join(a, b, column1, column2, result_relation, final_table, page_index);
+        Continue:
+            A->unload();
+            B->unload();
+            remove(A->sourceFileName.c_str());
+            remove(B->sourceFileName.c_str());
         }
         return block_accesses;
     }
@@ -349,11 +347,14 @@ void executeJOIN(int ch)
     {
         int page_index = 0;
         int block_accesses = Join(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table, page_index);
+        std::remove(final_table->sourceFileName.c_str());
+        // system(std::string("rm ") + final_table->sourceFileName);
         cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
     }
     else
     {
         int block_accesses = partitionJoin(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table);
+        std::remove(final_table->sourceFileName.c_str());
         cout << "Done partition join\n No. of block accesses  = " << block_accesses << endl;
     }
 

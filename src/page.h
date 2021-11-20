@@ -33,6 +33,7 @@ public:
     Page(const string &tableName, int pageIndex, const vector<int> &page_data);
     vector<int> getRow(int rowIndex);
     void writePage();
+    void writePage(int ch);
     // void WritePageForMatrix();
 };
 

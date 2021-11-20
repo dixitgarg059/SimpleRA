@@ -7,14 +7,21 @@
 namespace
 {
 
+    bool is_number(const std::string &s)
+    {
+        return !s.empty() && std::find_if(s.begin(),
+                                          s.end(), [](unsigned char c)
+                                          { return !std::isdigit(c); }) == s.end();
+    }
     bool check_syntax(const vector<string> &tq)
     {
         if (tq.size() != 13)
             return false;
         vector<string> syntax_vector_actual = {"<-", "JOIN", "USING", "ON", "==", "BUFFER"};
         vector<string> syntax_vector_got = {tq[1], tq[2], tq[3], tq[7], tq[9], tq[11]};
-        return syntax_vector_actual == syntax_vector_got;
+        return syntax_vector_actual == syntax_vector_got and is_number(tq.back());
     }
+
 }
 bool syntacticParseJOIN()
 {
@@ -29,8 +36,13 @@ bool syntacticParseJOIN()
 
     if (tq[4] == "NESTED")
         parsedQuery.queryType = JOIN_BLOCK_NESTED;
-    else
+    else if (tq[4] == "PARTHASH")
         parsedQuery.queryType = JOIN_PART_HASH;
+    else
+    {
+        cout << "SYNTAX ERROR" << endl;
+        return false;
+    }
 
     parsedQuery.joinResultRelationName = tq[0];
     parsedQuery.joinFirstRelationName = tq[5];
@@ -38,6 +50,7 @@ bool syntacticParseJOIN()
     parsedQuery.joinFirstColumnName = tq[8];
     parsedQuery.joinSecondColumnName = tq[10];
     parsedQuery.joinBinaryOperator = EQUAL;
+    nB = stoi(tq.back());
     return true;
 }
 

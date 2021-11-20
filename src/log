@@ -34,7 +34,7 @@ TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-Final <- JOIN USING PARTITIONHASH EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn BUFFER 10
+Final <- JOIN USING PARTHASH EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn BUFFER 10
 doCommand
 syntacticParse
 syntacticParseJOIN

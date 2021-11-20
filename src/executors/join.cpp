@@ -1,7 +1,7 @@
 #include "../global.h"
 /**
  * @brief
- * SYNTAX: R <- JOIN Using type relation_name1, relation_name2 ON column_name1 bin_op column_name2
+ * SYNTAX: R <- JOIN Using type relation_name1, relation_name2 ON column_name1 bin_op column_name2 BUFFER num
  */
 
 namespace
@@ -105,7 +105,7 @@ namespace
         return false;
     }
     using Record = vector<int>;
-    int Join(string name1, string name2, string column1, string column2, string result_relation, Table *final_table)
+    int Join(string name1, string name2, string column1, string column2, string result_relation, Table *final_table, int &page_index)
     {
 
         Page result = Page();
@@ -116,16 +116,16 @@ namespace
 
         Table *A = tableCatalogue.getTable(name1);
         Table *B = tableCatalogue.getTable(name2);
-        if (A->rowCount > B->rowCount)
-        {
-            swap(name1, name2);
-            swap(column1, column2);
-            swap(A, B);
-        }
+        // TODO
+        //  if (A->rowCount > B->rowCount)
+        //  {
+        //      swap(name1, name2);
+        //      swap(column1, column2);
+        //      swap(A, B);
+        //  }
         int idx1 = A->getColumnIndex(column1);
         int idx2 = B->getColumnIndex(column2);
 
-        int page_index = 0;
         int block_accesses = 0;
         while (1)
         {
@@ -182,6 +182,7 @@ namespace
             block_accesses++;
             result.rows.clear();
             final_table->blockCount++;
+            page_index++;
         }
 
         // cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
@@ -305,6 +306,7 @@ namespace
                 block_accesses++;
         }
 
+        int page_index = 0;
         for (int i = 0; i < M; i++)
         {
 
@@ -328,7 +330,7 @@ namespace
             // cout << a << " " << b << endl;
             // continue;
 
-            block_accesses += Join(a, b, column1, column2, result_relation, final_table);
+            block_accesses += Join(a, b, column1, column2, result_relation, final_table, page_index);
         }
         return block_accesses;
     }
@@ -345,7 +347,8 @@ void executeJOIN(int ch)
     tableCatalogue.insertTable(final_table);
     if (ch == 0)
     {
-        int block_accesses = Join(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table);
+        int page_index = 0;
+        int block_accesses = Join(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table, page_index);
         cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
     }
     else

@@ -239,9 +239,9 @@ Table::~unload
 BufferManager::deleteFile
 BufferManager::deleteFile: Success
 BufferManager::deleteFile
-BufferManager::deleteFile: Err
+BufferManager::deleteFile: Success
 BufferManager::deleteFile
-BufferManager::deleteFile: Err
+BufferManager::deleteFile: Success
 Table::isPermanent
 BufferManager::deleteFile: Success
 Table::~unload

@@ -165,6 +165,7 @@ Page *BufferManager::insertIntoPool(const string &tableName, int pageIndex, bool
         }
         Page *page = new Page(tableName, pageIndex);
         pages.push_back(page);
+        block_accesses++;
         return page;
     }
 }

@@ -127,6 +127,7 @@ void Page::writePage()
     ofstream fout(this->pageName, ios::trunc);
     WritePageHelper(this, fout);
     fout.close();
+    block_accesses++;
 }
 
 void Page::writePage(int ch)
@@ -135,6 +136,7 @@ void Page::writePage(int ch)
     ofstream fout(this->pageName, (ch ? ios::app : ios::trunc));
     WritePageHelper(this, fout);
     fout.close();
+    block_accesses++;
 }
 
 // Page::Page(string tableName, int pageIndex, vector<int> page_data)

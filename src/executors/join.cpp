@@ -204,6 +204,7 @@ namespace
         }
         fout.close();
         p->rows.clear();
+        block_accesses_write++;
         return true;
     }
 

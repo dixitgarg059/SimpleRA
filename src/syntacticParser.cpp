@@ -137,9 +137,9 @@ void ParsedQuery::clear()
  * @brief Checks to see if source file exists. Called when LOAD command is
  * invoked.
  *
- * @param tableName 
- * @return true 
- * @return false 
+ * @param tableName
+ * @return true
+ * @return false
  */
 bool isFileExists(string tableName)
 {
@@ -152,9 +152,9 @@ bool isFileExists(string tableName)
  * @brief Checks to see if source file exists. Called when SOURCE command is
  * invoked.
  *
- * @param tableName 
- * @return true 
- * @return false 
+ * @param tableName
+ * @return true
+ * @return false
  */
 bool isQueryFile(string fileName)
 {

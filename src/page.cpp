@@ -128,6 +128,7 @@ void Page::writePage()
     WritePageHelper(this, fout);
     fout.close();
     block_accesses++;
+    // cout << "writing page " << this->pageName << endl;
 }
 
 void Page::writePage(int ch)

@@ -1,1 +1,2 @@
-*.otemp
+*.o
+temp

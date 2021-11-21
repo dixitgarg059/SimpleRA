@@ -8,7 +8,7 @@ float BLOCK_SIZE = 1;
 uint BLOCK_COUNT = 2;
 uint PRINT_COUNT = 20;
 uint block_accesses = 0;
-uint nB = 10;
+uint nB = 1000;
 Logger logger;
 vector<string> tokenizedQuery;
 ParsedQuery parsedQuery;

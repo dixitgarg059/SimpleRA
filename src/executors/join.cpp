@@ -81,25 +81,32 @@ bool semanticParseJOIN()
 #define min(a, b) (a > b ? b : a)
 namespace
 {
-    bool InsertRecordIntoPage(Page &p, const vector<int> &record1, const vector<int> &record2, int &page_index, Table *final_table)
+
+    bool swaped = false;
+    bool InsertRecordIntoPage(Page &p, vector<int> record1, vector<int> record2, int &page_index, Table *final_table)
     {
+
+        if (swaped)
+            std::swap(record1, record2);
         vector<int> record = record1;
         for (auto it : record2)
             record.push_back(it);
         p.rows.push_back(record);
-        if (p.rows.size() == BLOCK_SIZE)
+
+        if (!p.rows.empty() and !p.rows[0].empty() and p.rows.size() >= ((int)BLOCK_SIZE * 1000 / (sizeof(int) * p.rows[0].size())))
         {
+
             final_table->rowCount += p.rows.size();
             p.rowCount = p.rows.size();
             p.columnCount = p.rows[0].size();
             p.pageName = "../data/temp/" + p.tableName + "_Page" + to_string(page_index);
             p.writePage();
+            final_table->rowsPerBlockCount.push_back(p.rows.size());
             p.rows.clear();
             page_index++;
             p.rowCount = 0;
             p.columnCount = 0;
             final_table->blockCount++;
-            final_table->rowsPerBlockCount.push_back(BLOCK_SIZE);
             return true;
         }
         return false;
@@ -113,31 +120,24 @@ namespace
 
         Table *A = tableCatalogue.getTable(name1);
         Table *B = tableCatalogue.getTable(name2);
+        swaped = false;
         if (A->rowCount > B->rowCount)
         {
-
-            final_table->columns.clear();
-            auto &new_columns = final_table->columns;
-            for (auto it : B->columns)
-                new_columns.push_back(it);
-            for (auto it : A->columns)
-                new_columns.push_back(it);
-
             swap(name1, name2);
             swap(column1, column2);
             swap(A, B);
+            swaped = true;
         }
         int idx1 = A->getColumnIndex(column1);
         int idx2 = B->getColumnIndex(column2);
 
-        // int block_accesses = 0;
         while (1)
         {
 
-            for (int i = 0; i < min(nB - 2, A->blockCount - idx); i++)
+            int idx_temp = idx;
+            for (int i = 0; i < min(nB - 2, A->blockCount - idx_temp); i++)
             {
                 Page *p = bufferManager.getPage(name1, idx);
-                // block_accesses++;
                 int cnt = 0;
                 for (const auto &record : p->rows)
                 {
@@ -145,7 +145,6 @@ namespace
                         break;
                     outer[record[idx1]].push_back(record);
                 }
-
                 idx++;
             }
             if (outer.empty())
@@ -153,7 +152,6 @@ namespace
             for (int i = 0; i < B->blockCount; i++)
             {
                 Page *p = bufferManager.getPage(name2, i);
-                // block_accesses++;
                 int cnt1 = 0;
                 for (auto &record2 : p->rows)
                 {
@@ -167,7 +165,6 @@ namespace
                     for (auto record1 : outer[val2])
                     {
                         InsertRecordIntoPage(result, record1, record2, page_index, final_table);
-                        // block_accesses++;
                     }
                 }
             }
@@ -176,23 +173,19 @@ namespace
         if (not_called_by_partition_hash && !result.rows.empty())
         {
 
-            // cout << "inserted record";
             final_table->rowsPerBlockCount.push_back(result.rows.size());
             final_table->rowCount += result.rows.size();
             result.rowCount = result.rows.size();
             result.columnCount = result.rows[0].size();
             result.pageName = "../data/temp/" + result.tableName + "_Page" + to_string(page_index);
             result.writePage();
-            // block_accesses++;
             result.rows.clear();
             final_table->blockCount++;
         }
-
-        // cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
         return;
     }
 
-    const int M = nB - 1;
+    int M = nB - 1;
 
     bool clear_buffer(Page *p, const string &filename)
     {
@@ -218,7 +211,7 @@ namespace
     bool InsertRecordIntoPage2(Page *p, vector<int> &record, const string &filename)
     {
         p->rows.push_back(record);
-        if (p->rows.size() == BLOCK_SIZE)
+        if (!p->rows.empty() and !p->rows[0].empty() and p->rows.size() >= ((int)BLOCK_SIZE * 1000 / (sizeof(int) * p->rows[0].size())))
         {
             return clear_buffer(p, filename);
         }
@@ -270,7 +263,6 @@ namespace
         for (int i = 0; i < A->blockCount; i++)
         {
             Page *p = bufferManager.getPage(name1, i);
-            // block_accesses++;
             int cnt = 0;
             for (auto record : p->rows)
             {
@@ -289,7 +281,6 @@ namespace
         for (int i = 0; i < B->blockCount; i++)
         {
             Page *p = bufferManager.getPage(name2, i);
-            // block_accesses++;
             int cnt = 0;
             for (auto record : p->rows)
             {
@@ -333,7 +324,8 @@ namespace
         if (!result.rows.empty())
         {
 
-            // cout << "inserted record";
+            // if (swaped)
+            // std::swap(record1, record2);
             final_table->rowsPerBlockCount.push_back(result.rows.size());
             final_table->rowCount += result.rows.size();
             result.rowCount = result.rows.size();
@@ -366,12 +358,12 @@ void executeJOIN(int ch)
         block_accesses = 0;
         Join(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table, page_index, result);
         std::remove(final_table->sourceFileName.c_str());
-        // system(std::string("rm ") + final_table->sourceFileName);
         std::cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
     }
     else
     {
         block_accesses = 0;
+        M = nB - 1;
         partitionJoin(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table, result);
         std::remove(final_table->sourceFileName.c_str());
         std::cout << "Done partition join\n No. of block accesses  = " << block_accesses << endl;

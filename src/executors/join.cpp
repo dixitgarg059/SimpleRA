@@ -49,6 +49,7 @@ bool syntacticParseJOIN()
     parsedQuery.joinFirstColumnName = tq[8];
     parsedQuery.joinSecondColumnName = tq[10];
     parsedQuery.joinBinaryOperator = EQUAL;
+    cout << nB;
     nB = stoi(tq.back());
     return true;
 }

@@ -6,7 +6,6 @@
 
 namespace
 {
-
     bool is_number(const std::string &s)
     {
         return !s.empty() && std::find_if(s.begin(),
@@ -219,7 +218,12 @@ namespace
     }
     int Hash(int r)
     {
-        return r % M;
+
+        long long int x = r;
+        x = ((x >> 16) ^ x) * 0x45d9f3b;
+        x = ((x >> 16) ^ x) * 0x45d9f3b;
+        x = (x >> 16) ^ x;
+        return (int)(x % M);
     }
 
     void partitionJoin(string name1, string name2, string column1, string column2, string result_relation, Table *final_table, Page &result)
@@ -332,7 +336,6 @@ namespace
             result.columnCount = result.rows[0].size();
             result.pageName = "../data/temp/" + result.tableName + "_Page" + to_string(page_index);
             result.writePage();
-
             result.rows.clear();
             final_table->blockCount++;
         }
@@ -355,18 +358,20 @@ void executeJOIN(int ch)
     if (ch == 0)
     {
         int page_index = 0;
-        block_accesses = 0;
+        block_accesses_read = 0;
+        block_accesses_write = 0;
         Join(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table, page_index, result);
         std::remove(final_table->sourceFileName.c_str());
-        std::cout << "Done block nested join\n No. of block accesses  = " << block_accesses << endl;
+        std::cout << "Done block nested join\n No. of block accesses  for reading = " << block_accesses_read << "\n No. of block accesses for writing = " << block_accesses_write << endl;
     }
     else
     {
-        block_accesses = 0;
         M = nB - 1;
+        block_accesses_read = 0;
+        block_accesses_write = 0;
         partitionJoin(parsedQuery.joinFirstRelationName, parsedQuery.joinSecondRelationName, parsedQuery.joinFirstColumnName, parsedQuery.joinSecondColumnName, parsedQuery.joinResultRelationName, final_table, result);
         std::remove(final_table->sourceFileName.c_str());
-        std::cout << "Done partition join\n No. of block accesses  = " << block_accesses << endl;
+        std::cout << "Done partition hash join\n No. of block accesses  for reading = " << block_accesses_read << "\n No. of block accesses for writing = " << block_accesses_write << endl;
     }
 
     logger.log("executeJOIN");

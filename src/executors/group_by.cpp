@@ -170,10 +170,11 @@ void executeGROUPBY()
     result_columns.push_back(parsedQuery.groupAggregateOperator + parsedQuery.groupAggregateAttribute);
     Table *final_table = new Table(parsedQuery.groupResultRelationName, result_columns);
     tableCatalogue.insertTable(final_table);
-    block_accesses = 0;
+    block_accesses_read = 0;
+    block_accesses_write = 0;
     GroupBy(parsedQuery.groupRelationName, parsedQuery.groupAttribute, parsedQuery.groupAggregateOperator, parsedQuery.groupAggregateAttribute,
             parsedQuery.groupResultRelationName, final_table);
-    std::cout << "Done Group By\n No. of block accesses  = " << block_accesses << endl;
+    std::cout << "Done group by \n No. of block accesses  for reading = " << block_accesses_read << "\n No. of block accesses for writing = " << block_accesses_write << endl;
     logger.log("executeJOIN");
     return;
 }

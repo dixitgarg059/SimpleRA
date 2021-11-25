@@ -89,6 +89,11 @@ namespace
     }
     void aggragationHelper(unordered_map<int, pair<int, int>> &m, int key, int value, string op)
     {
+        if(m.find(key)==m.end())
+        {
+            m[key] = {value, 1};
+            return;
+        }
 
         if (op == "MAX")
         {
@@ -148,7 +153,6 @@ namespace
         }
         if (!result.rows.empty())
         {
-            cout << result.rows.size();
             final_table->rowsPerBlockCount.push_back(result.rows.size());
             final_table->rowCount += result.rows.size();
             result.rowCount = result.rows.size();

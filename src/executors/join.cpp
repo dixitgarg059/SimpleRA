@@ -354,7 +354,7 @@ void executeJOIN(int ch)
     for (auto it : B->columns)
         result_columns.push_back(it);
     Table *final_table = new Table(parsedQuery.joinResultRelationName, result_columns);
-    tableCatalogue.insertTable(final_table);
+    // tableCatalogue.insertTable(final_table);
     Page result = Page();
     result.tableName = parsedQuery.joinResultRelationName;
     if (ch == 0)
@@ -375,7 +375,14 @@ void executeJOIN(int ch)
         std::remove(final_table->sourceFileName.c_str());
         std::cout << "Done partition hash join\n No. of block accesses  for reading = " << block_accesses_read << "\n No. of block accesses for writing = " << block_accesses_write << endl;
     }
-
+    if (final_table->rowCount) {
+        tableCatalogue.insertTable(final_table);
+    } 
+    else {
+        final_table->unload();
+        delete final_table;
+        cout << "Empty Table" << endl;
+    }
     logger.log("executeJOIN");
     return;
 }

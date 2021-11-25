@@ -2,7 +2,7 @@ BufferManager::BufferManager
 ParseQuery::clear
 
 Reading New Command: 
-LOAD EMPLOYEE
+LOAD X 
 doCommand
 syntacticParse
 syntacticParseLOAD
@@ -18,7 +18,7 @@ TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-LOAD X
+LOAD Y 
 doCommand
 syntacticParse
 syntacticParseLOAD
@@ -34,90 +34,13 @@ TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-PRINT X
+RS1 <- JOIN USING NESTED X, Y ON col12 == col22 BUFFER 10 
 doCommand
 syntacticParse
-syntacticParsePRINT
+syntacticParseJOIN
 semanticParse
-semanticParsePRINT
+semanticParseJOIN
 TableCatalogue::isTable
-executePRINT
-TableCatalogue::getTable
-Table::print
-Table::printRow
-Cursor::Cursor
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-ParseQuery::clear
-
-Reading New Command: 
-RES <- GROUP BY col11 FROM X RETURN AVG(col12)
-doCommand
-syntacticParse
-syntacticParseGROUPBY
-semanticParse
-semanticParseGROUPBY
 TableCatalogue::isTable
 TableCatalogue::isTable
 TableCatalogue::isColumnFromTable
@@ -128,10 +51,12 @@ TableCatalogue::isColumnFromTable
 TableCatalogue::isTable
 TableCatalogue::getTable
 Table::isColumn
+TableCatalogue::getTable
+TableCatalogue::getTable
 Table::Table
 Table::printRow
 Table::printRow
-TableCatalogue::~insertTable
+TableCatalogue::getTable
 TableCatalogue::getTable
 Table::getColumnIndex
 Table::getColumnIndex
@@ -141,92 +66,31 @@ TableCatalogue::getTable
 TableCatalogue::getTable
 Page::Page
 TableCatalogue::getTable
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Page::writePage
+Table::~unload
+Table::isPermanent
+BufferManager::deleteFile: Err
 executeJOIN
 ParseQuery::clear
 
 Reading New Command: 
-PRINT RES
+EXPORT RS1 
 doCommand
 syntacticParse
-syntacticParsePRINT
+syntacticParseEXPORT
 semanticParse
-semanticParsePRINT
+semanticParseEXPORT
 TableCatalogue::isTable
-executePRINT
-TableCatalogue::getTable
-Table::print
-Table::printRow
-Cursor::Cursor
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
 ParseQuery::clear
 
 Reading New Command: 
+
+MatrixCatalogue::~MatrixCatalogue
+TableCatalogue::~TableCatalogue
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent

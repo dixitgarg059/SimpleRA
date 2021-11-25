@@ -56,7 +56,6 @@ TableCatalogue::getTable
 Table::Table
 Table::printRow
 Table::printRow
-TableCatalogue::~insertTable
 TableCatalogue::getTable
 TableCatalogue::getTable
 Table::getColumnIndex
@@ -153,7 +152,6 @@ TableCatalogue::getTable
 TableCatalogue::getTable
 Page::Page
 TableCatalogue::getTable
-Page::writePage
 Table::~unload
 BufferManager::deleteFile
 BufferManager::deleteFile: Success
@@ -334,6 +332,7 @@ BufferManager::deleteFile
 BufferManager::deleteFile: Success
 Table::isPermanent
 Page::writePage
+TableCatalogue::~insertTable
 executeJOIN
 ParseQuery::clear
 
@@ -989,133 +988,6 @@ Table::printRow
 Cursor::geNext
 Page::getRow
 Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-TableCatalogue::getTable
-Table::getNext
-Cursor::nextPage
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
 ParseQuery::clear
 
 Reading New Command: 
@@ -1124,20 +996,6 @@ MatrixCatalogue::~MatrixCatalogue
 TableCatalogue::~TableCatalogue
 Table::~unload
 BufferManager::deleteFile
-BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-BufferManager::deleteFile
 BufferManager::deleteFile: Success
 BufferManager::deleteFile
 BufferManager::deleteFile: Success
@@ -1152,12 +1010,6 @@ BufferManager::deleteFile: Err
 Table::~unload
 BufferManager::deleteFile
 BufferManager::deleteFile: Err
-Table::isPermanent
-Table::~unload
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
-BufferManager::deleteFile
-BufferManager::deleteFile: Success
 Table::isPermanent
 Table::~unload
 BufferManager::deleteFile
@@ -1190,6 +1042,24 @@ Table::isPermanent
 Table::~unload
 BufferManager::deleteFile
 BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Err
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Err
+Table::isPermanent
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Err
+Table::isPermanent
+Table::~unload
 BufferManager::deleteFile
 BufferManager::deleteFile: Success
 BufferManager::deleteFile

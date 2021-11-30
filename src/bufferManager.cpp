@@ -26,9 +26,8 @@ Page *BufferManager::getPage(const string &tableName, int pageIndex)
     else
     {
         // cout << "2";
-        bool is_matrix = true;
-        if (tableCatalogue.getTable(tableName))
-            is_matrix = false;
+
+        bool is_matrix = false;
         return this->insertIntoPool(tableName, pageIndex, is_matrix);
     }
 }
@@ -114,62 +113,62 @@ Page *BufferManager::getFromPool2(const string &pageName, int rowNumber)
 Page *BufferManager::insertIntoPool(const string &tableName, int pageIndex, bool is_matrix)
 {
 
-    while (!pages_having_one_row.empty())
-    {
-        delete pages_having_one_row.front();
-        pages_having_one_row.pop_front();
-    }
-    if (is_matrix)
-    {
-        // logger.log("BufferManager::insertIntoPool for matrix");
-        string file_name = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
-        ifstream fin(file_name, ios::in);
-        string line;
-        // Page page;
-        vector<vector<int>> data;
-        vector<int> row;
-        if (this->pages.size() >= BLOCK_COUNT)
-        {
-            delete pages.front();
-            pages.pop_front();
-        }
-        Page *page = new Page(tableName, pageIndex, data, data.size());
-        while (getline(fin, line))
-        {
+    // while (!pages_having_one_row.empty())
+    // {
+    //     delete pages_having_one_row.front();
+    //     pages_having_one_row.pop_front();
+    // }
+    // if (is_matrix)
+    // {
+    //     // logger.log("BufferManager::insertIntoPool for matrix");
+    //     string file_name = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
+    //     ifstream fin(file_name, ios::in);
+    //     string line;
+    //     // Page page;
+    //     vector<vector<int>> data;
+    //     vector<int> row;
+    //     if (this->pages.size() >= BLOCK_COUNT)
+    //     {
+    //         delete pages.front();
+    //         pages.pop_front();
+    //     }
+    //     Page *page = new Page(tableName, pageIndex, data, data.size());
+    //     while (getline(fin, line))
+    //     {
 
-            string word;
-            stringstream s(line);
-            int no_columns = 0;
-            page->rows.push_back(row);
-            if (page->rows.size() > 1)
-                page->rows.back().reserve(prev(page->rows.end())->size());
-            while (getline(s, word, ' '))
-            {
-                no_columns++;
-                page->rows[page->rowCount].push_back(stoi(word));
-            }
-            page->columnCount = no_columns;
-            page->rowCount++;
-        }
-        pages.push_back(page);
-        return page;
-    }
-    else
+    //         string word;
+    //         stringstream s(line);
+    //         int no_columns = 0;
+    //         page->rows.push_back(row);
+    //         if (page->rows.size() > 1)
+    //             page->rows.back().reserve(prev(page->rows.end())->size());
+    //         while (getline(s, word, ' '))
+    //         {
+    //             no_columns++;
+    //             page->rows[page->rowCount].push_back(stoi(word));
+    //         }
+    //         page->columnCount = no_columns;
+    //         page->rowCount++;
+    //     }
+    //     pages.push_back(page);
+    //     return page;
+    // }
+    // else
+    // {
+
+    // logger.log("BufferManager::insertIntoPool for table");
+    if (this->pages.size() >= BLOCK_COUNT)
     {
-
-        // logger.log("BufferManager::insertIntoPool for table");
-        if (this->pages.size() >= BLOCK_COUNT)
-        {
-            delete pages.front();
-            pages.pop_front();
-        }
-        Page *page = new Page(tableName, pageIndex);
-        pages.push_back(page);
-        // cout << "reading page " << page->pageName << endl;
-
-        block_accesses_read++;
-        return page;
+        delete pages.front();
+        pages.pop_front();
     }
+    Page *page = new Page(tableName, pageIndex);
+    pages.push_back(page);
+    // cout << "reading page " << page->pageName << endl;
+
+    block_accesses_read++;
+    return page;
+    // }
 }
 
 Page *BufferManager::insertIntoPool2(const string &tableName, int pageIndex, int rowNumber)

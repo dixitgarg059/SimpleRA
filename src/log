@@ -18,49 +18,7 @@ TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-PRINT EMPLOYEE
-doCommand
-syntacticParse
-syntacticParsePRINT
-semanticParse
-semanticParsePRINT
-TableCatalogue::isTable
-executePRINT
-TableCatalogue::getTable
-Table::print
-Table::printRow
-Cursor::Cursor
-TableCatalogue::getTable
-Page::Page
-TableCatalogue::getTable
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-ParseQuery::clear
-
-Reading New Command: 
-R <- SORT EMPLOYEE BY Dno IN ASC
+FINAL <- SORT EMPLOYEE BY Dno IN ASC BUFFER 3
 doCommand
 syntacticParse
 syntacticParseSORT
@@ -75,6 +33,22 @@ Table::isColumn
 executeSORT
 TableCatalogue::getTable
 Table::getColumnIndex
+Page::Page
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Page::writePage
+Page::writePage
+Page::Page
+TableCatalogue::getTable
+Page::Page
+TableCatalogue::getTable
+Page::writePage
+Page::writePage
+Page::writePage
+Page::writePage
+Page::writePage
+Page::writePage
 Table::Table
 Table::load
 Table::extractColumnNames
@@ -83,19 +57,20 @@ TableCatalogue::~insertTable
 ParseQuery::clear
 
 Reading New Command: 
-PRINT R
+EXPORT FINAL
 doCommand
 syntacticParse
-syntacticParsePRINT
+syntacticParseEXPORT
 semanticParse
-semanticParsePRINT
+semanticParseEXPORT
 TableCatalogue::isTable
-executePRINT
+executeEXPORT
 TableCatalogue::getTable
-Table::print
+Table::makePermanent
+Table::isPermanent
+BufferManager::deleteFile: Err
 Table::printRow
 Cursor::Cursor
-TableCatalogue::getTable
 Page::Page
 TableCatalogue::getTable
 Cursor::geNext
@@ -106,64 +81,11 @@ Page::getRow
 Table::printRow
 Cursor::geNext
 Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-ParseQuery::clear
-
-Reading New Command: 
-S <- SORT EMPLOYEE BY Dno IN DESC
-doCommand
-syntacticParse
-syntacticParseSORT
-semanticParse
-semanticParseSORT
-TableCatalogue::isTable
-TableCatalogue::isTable
-TableCatalogue::isColumnFromTable
-TableCatalogue::isTable
 TableCatalogue::getTable
-Table::isColumn
-executeSORT
-TableCatalogue::getTable
-Table::getColumnIndex
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-TableCatalogue::~insertTable
-ParseQuery::clear
-
-Reading New Command: 
-PRINT S
-doCommand
-syntacticParse
-syntacticParsePRINT
-semanticParse
-semanticParsePRINT
-TableCatalogue::isTable
-executePRINT
-TableCatalogue::getTable
-Table::print
-Table::printRow
-Cursor::Cursor
-TableCatalogue::getTable
+Table::getNext
+Cursor::nextPage
 Page::Page
 TableCatalogue::getTable
-Cursor::geNext
 Page::getRow
 Table::printRow
 Cursor::geNext
@@ -171,85 +93,23 @@ Page::getRow
 Table::printRow
 Cursor::geNext
 Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-ParseQuery::clear
-
-Reading New Command: 
-Q <- SORT EMPLOYEE BY Dno IN ASC BUFFER 10
-doCommand
-syntacticParse
-syntacticParseSORT
-semanticParse
-semanticParseSORT
-TableCatalogue::isTable
-TableCatalogue::isTable
-TableCatalogue::isColumnFromTable
-TableCatalogue::isTable
 TableCatalogue::getTable
-Table::isColumn
-executeSORT
-TableCatalogue::getTable
-Table::getColumnIndex
-TableCatalogue::getTable
+Table::getNext
+Cursor::nextPage
 Page::Page
 TableCatalogue::getTable
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-TableCatalogue::~insertTable
-ParseQuery::clear
-
-Reading New Command: 
-PRINT Q
-doCommand
-syntacticParse
-syntacticParsePRINT
-semanticParse
-semanticParsePRINT
-TableCatalogue::isTable
-executePRINT
-TableCatalogue::getTable
-Table::print
+Page::getRow
 Table::printRow
-Cursor::Cursor
+Cursor::geNext
+Page::getRow
+Table::printRow
+Cursor::geNext
+Page::getRow
 TableCatalogue::getTable
+Table::getNext
+Cursor::nextPage
 Page::Page
 TableCatalogue::getTable
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
 Page::getRow
 Table::printRow
 Cursor::geNext
@@ -258,65 +118,27 @@ Table::printRow
 ParseQuery::clear
 
 Reading New Command: 
-QQ <- SORT EMPLOYEE BY Dno IN ASC BUFFER 1
-doCommand
-syntacticParse
-syntacticParseSORT
-semanticParse
-semanticParseSORT
-TableCatalogue::isTable
-TableCatalogue::isTable
-TableCatalogue::isColumnFromTable
-TableCatalogue::isTable
-TableCatalogue::getTable
-Table::isColumn
-executeSORT
-TableCatalogue::getTable
-Table::getColumnIndex
-Table::Table
-Table::load
-Table::extractColumnNames
-Table::blockify
-TableCatalogue::~insertTable
-ParseQuery::clear
 
-Reading New Command: 
-PRINT Q
-doCommand
-syntacticParse
-syntacticParsePRINT
-semanticParse
-semanticParsePRINT
-TableCatalogue::isTable
-executePRINT
-TableCatalogue::getTable
-Table::print
-Table::printRow
-Cursor::Cursor
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-Cursor::geNext
-Page::getRow
-Table::printRow
-ParseQuery::clear
-
-Reading New Command: 
+MatrixCatalogue::~MatrixCatalogue
+TableCatalogue::~TableCatalogue
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent
+BufferManager::deleteFile: Err
+Table::~unload
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+BufferManager::deleteFile
+BufferManager::deleteFile: Success
+Table::isPermanent

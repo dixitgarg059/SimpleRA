@@ -10,11 +10,18 @@ namespace
             for (int columnCounter = 0; columnCounter < p->columnCount; columnCounter++)
             {
                 if (columnCounter != 0)
+                {
+                    cout << " ";
                     fout << " ";
+                }
                 fout << p->rows[rowCounter][columnCounter];
+                // cout << p->rows[rowCounter][columnCounter];
             }
             if (rowCounter != p->rowCount)
+            {
                 fout << "\n";
+                // cout << endl;
+            }
         }
     }
 

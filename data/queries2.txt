@@ -1,5 +1,3 @@
-LOAD EMPLOYEE                                                                                                
-LOAD DEPARTMENT
-Final <- JOIN USING NESTED EMPLOYEE, DEPARTMENT ON Ssn == Mgr_ssn BUFFER 10
-PRINT Final
-EXPORT Final
+LOAD EMPLOYEE
+FINAL <- SORT EMPLOYEE BY Dno IN ASC BUFFER 3
+PRINT FINAL

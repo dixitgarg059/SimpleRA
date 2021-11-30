@@ -1,0 +1,3 @@
+LOAD test
+sorted_test <- SORT test BY B IN DESC BUFFER 1500
+EXPORT sorted_test

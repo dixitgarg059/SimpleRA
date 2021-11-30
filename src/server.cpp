@@ -6,6 +6,7 @@ using namespace std;
 
 float BLOCK_SIZE = 1;
 uint BLOCK_COUNT = 2;
+uint BUFFER_SIZE = 10;
 uint PRINT_COUNT = 20;
 uint block_accesses_read = 0;
 uint block_accesses_write = 0;

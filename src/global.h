@@ -5,6 +5,7 @@
 #define uint unsigned int
 extern float BLOCK_SIZE;
 extern uint BLOCK_COUNT;
+extern uint BUFFER_SIZE;
 extern uint PRINT_COUNT;
 extern uint block_accesses_read;
 extern uint block_accesses_write;

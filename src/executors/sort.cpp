@@ -34,6 +34,109 @@ namespace
     }
 }
 
+namespace SortTable2
+{
+
+    
+    void sort(Table *table, int idx, int mode /*acs = 1, desc = 0*/, const string &final_table_name)
+    {
+        // vector<ifstream *> opened_files;
+        int file_count = 0;
+        int total_runs = 0;
+        for (int i = 0; i < table->blockCount;)
+        {
+
+            vector<Record> data;
+            for (int c = 0; c < BUFFER_SIZE - 1 && i < table->blockCount; c++)
+            {
+                Page *p = bufferManager.getPage(table->tableName, i);
+                int cnt = 0;
+                for (auto &rcd : p->rows)
+                {
+                    if (cnt++ == p->rowCount)
+                        break;
+                    data.push_back(rcd);
+                }
+                i++;
+            }
+            if (mode == 1)
+                sort(data.begin(), data.end(), [&idx](Record &record1, Record &record2)
+                     { return record1[idx] < record2[idx]; });
+            else
+                sort(data.begin(), data.end(), [&idx](Record &record1, Record &record2)
+                     { return record1[idx] > record2[idx]; });
+
+            string file_name = "../data/temp/0_run_" + to_string(file_count++) + ".txt";
+            ofstream fout(file_name, ios::out);
+            for (auto &record : data)
+            {
+                int it = 0;
+                for (auto value : record)
+                {
+                    fout << value;
+                    if (it++ != record.size() - 1)
+                        fout << " ";
+                }
+                fout << endl;
+            }
+            fout.close();
+            total_runs++;
+            // ifstream *file_pointer = new ifstream(file_name.c_str());
+            // opened_files.push_back(file_pointer);
+        }
+        int iteration = 0;
+        while (1)
+        {
+            int degree = BUFFER_SIZE - 1;
+            for (int i = 0; i < total_runs;)
+            {
+                vector<fstream *> opened_files;
+                for (int c = 0; c < degree && i < total_runs; c++, i++)
+                {
+                }
+            }
+        }
+
+        using T = pair<int, pair<int, Record *>>;
+        auto comp = [&mode](T &A, T &B)
+        { return (A < B) ^ mode; };
+        priority_queue<T, vector<T>, decltype(comp)> que(comp);
+        string filename = "../data/temp/sorted_output.csv";
+        ofstream final_file(filename, ios::out);
+        PushIntoFile(final_file, &table->columns);
+        int cnt = 0;
+        for (auto fp : opened_files)
+        {
+            Record *new_record = GetRecord(fp);
+            if (!new_record->empty())
+                que.push({new_record->at(idx), {cnt++, new_record}});
+        }
+        while (!que.empty())
+        {
+            auto [value, temp] = que.top();
+            auto [idx_file, record_ptr] = temp;
+            PushIntoFile(final_file, record_ptr);
+            record_ptr = GetRecord(opened_files[idx_file]);
+            que.pop();
+            if (!record_ptr->empty())
+                que.push({record_ptr->at(idx), {idx_file, record_ptr}});
+        }
+        final_file.close();
+
+        Table *final_table = new Table();
+        final_table->sourceFileName = filename;
+        final_table->tableName = final_table_name;
+        final_table->load();
+        tableCatalogue.insertTable(final_table);
+        for (int i = 0; i < file_count; i++)
+        {
+            remove(("../data/temp/" + to_string(i + 1) + ".txt").c_str());
+        }
+        remove(filename.c_str());
+    }
+
+}
+
 namespace SortTable
 {
 
